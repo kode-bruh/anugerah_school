@@ -1,0 +1,351 @@
+<odoo>
+	<data>
+		<!-- General Menu -->
+			<menuitem id="asm_accounting.root_menu" name="Keuangan"/>
+			<menuitem id="accounting_cfg_menu" parent="asm_accounting.root_menu" name="Konfigurasi" sequence="300"/>
+
+		<!-- Expense View -->			
+			<record id="expense_act" model="ir.actions.act_window">
+				<field name="name">Pengeluaran</field>
+				<field name="res_model">asm.transaction</field>
+				<field name="view_mode">tree,form</field>
+				<field name="domain">[('type', '=', 'OUT')]</field>
+				<field name="context">{'default_type': 'OUT'}</field>
+			</record>
+
+			<menuitem id="expense_menu" name="Pengeluaran" parent="asm_accounting.root_menu" action="expense_act"/>
+
+		<!-- Revenue View -->			
+			<record id="revenue_act" model="ir.actions.act_window">
+				<field name="name">Pemasukan</field>
+				<field name="res_model">asm.transaction</field>
+				<field name="view_mode">tree,form</field>
+				<field name="domain">[('type', '=', 'IN')]</field>
+				<field name="context">{'default_type': 'IN'}</field>
+			</record>
+
+			<menuitem id="revenue_menu" name="Pemasukan" parent="asm_accounting.root_menu" action="revenue_act"/>
+
+		<!-- Transaction View -->
+			<record id="transaction_search_view" model="ir.ui.view">
+				<field name="name">transaction_search_view</field>
+				<field name="model">asm.transaction</field>
+				<field name="arch" type="xml">
+					<search>
+						<field name="account_id"/>
+						<field name="date"/>
+						<field name="payment_method"/>
+					</search>
+				</field>
+			</record>
+
+			<record id="transaction_search_view" model="ir.ui.view">
+				<field name="name">transaction_search_view</field>
+				<field name="model">asm.transaction</field>
+				<field name="arch" type="xml">
+					<search>
+						<filter string="Transaksi Hari Ini" name="today_transaction" domain="[('approved_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('approved_date', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:00'))]"/>
+						<group expand="0" string="Group By">
+	                        <filter string="Metode Bayar" name="payment_method" domain="[]" context="{'group_by': 'payment_method'}"/>
+	                    </group>
+					</search>
+				</field>
+			</record>
+
+			<record id="transaction_tree_view" model="ir.ui.view">
+				<field name="name">transaction_tree_view</field>
+				<field name="model">asm.transaction</field>
+				<field name="arch" type="xml">
+					<tree default_order="date desc">
+						<field name="currency_id" invisible="1"/>
+						<field name="name"/>
+						<field name="date"/>
+						<field name="amount_total" sum="Jumlah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<field name="state"/>
+						<field name="create_uid"/>
+						<field name="approved_by"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="transaction_form_view" model="ir.ui.view">
+				<field name="name">transaction_form_view</field>
+				<field name="model">asm.transaction</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<field name="state" widget="statusbar"/>
+							<button string="Approve" type="object" name="action_approve" attrs="{'invisible': [('state', '!=', 'Draft')]}" class="oe_highlight"/>
+							<button string="Post" type="object" name="action_post" attrs="{'invisible': [('state', '!=', 'Approved')]}" class="oe_highlight"/>
+							<button string="Unpost" type="object" name="action_unpost"  confirm="Anda akan menghapus jurnal transaksi ini. Anda yakin?" attrs="{'invisible': [('state', '!=', 'Posted')]}" groups="asm_accounting.manager_group"/>
+							<button string="Set to Draft" type="object" name="action_draft"  attrs="{'invisible': [('state', '!=', 'Cancelled')]}"/>
+							<button string="Cancel" type="object" name="action_cancel" groups="asm_student_payment.manager_group" confirm="Anda akan membatalkan pengeluaran ini. Anda yakin?" attrs="{'invisible': [('state', '=', 'Draft')]}"/>
+						</header>
+						<sheet>
+							<div class="oe_title">
+								<h1>
+									<field name="name" readonly="1"/>
+								</h1>
+							</div>
+							<group>
+								<field name="type" groups="base.group_no_one" required="1"/>
+							</group>
+							<group>
+								<group>
+									<field name="partner" attrs="{'required': [('type', '=', 'OUT')]}"/>
+									<field name="account_id" attrs="{'readonly': [('state', '!=', 'Draft')]}" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="payment_method" attrs="{'readonly': [('state', '!=', 'Draft')]}" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="date" attrs="{'readonly': [('state', '!=', 'Draft')]}"/>
+									<field name="approved_by" attrs="{'invisible': [('state', '!=', 'Approved')]}"/>
+									<field name="approved_date" attrs="{'invisible': [('state', '!=', 'Approved')]}"/>
+								</group>
+								<group>
+									<field name="file" filename="filename"/>
+									<field name="filename" invisible="1"/>
+								</group>
+							</group>
+							<group>
+								<label for="transaction_line_ids" class="oe_edit_only"/>
+								<div colspan="2">
+									<field name="transaction_line_ids" nolabel="1" attrs="{'readonly': [('state', '!=', 'Draft')]}"/>
+								</div>
+								<field name="currency_id" invisible="1"/>
+								<h3><field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/></h3>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+		<!-- Transaction Line View -->
+			<record id="transaction_line_tree_view" model="ir.ui.view">
+				<field name="name">transaction_line_tree_view</field>
+				<field name="model">as.transaction.lines</field>
+				<field name="arch" type="xml">
+					<tree editable="bottom">
+						<field name="currency_id" invisible="1"/>
+						<field name="item" required="1"/>
+						<field name="quantity"/>
+						<field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<field name="tax"/>
+						<field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+					</tree>
+				</field>
+			</record>
+
+		<!-- Journal View -->
+			<record id="journal_search_view" model="ir.ui.view">
+				<field name="name">journal_search_view</field>
+				<field name="model">asm.journal</field>
+				<field name="arch" type="xml">
+					<search>
+						<field name="note"/>
+						<field name="payment_method"/>
+						<field name="account_id"/>
+						<filter string="Jurnal Hari Ini" name="today_transaction" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('date', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:00'))]"/>
+						<group expand="0" string="Group By">
+	                        <filter string="Metode Bayar" name="payment_method" domain="[]" context="{'group_by': 'payment_method'}"/>
+	                    </group>
+					</search>
+				</field>
+			</record>
+
+			<record id="journal_tree_view" model="ir.ui.view">
+				<field name="name">journal_tree_view</field>
+				<field name="model">asm.journal</field>
+				<field name="arch" type="xml">
+					<tree default_order="date desc" create="false" delete="false" edit="false" decoration-muted="active==False">
+						<field name="currency_id" invisible="1"/>
+						<field name="active" invisible="1"/>
+						<field name="name"/>
+						<field name="note"/>
+						<field name="date"/>
+						<field name="payment_method"/>
+						<field name="credit" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Kredit"/>
+						<field name="debit" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Debit"/>
+						<field name="account_id"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="journal_form_view" model="ir.ui.view">
+				<field name="name">journal_form_view</field>
+				<field name="model">asm.journal</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<field name="change_ids" invisible="1"/>
+							<field name="change_count" invisible="1"/>
+							<div class="oe_button_box" name="button_box">
+								<button name="view_journal_changes" type="object" icon="fa-eye" attrs="{'invisible': [('change_count', '=', 0)]}" groups="asm_accounting.manager_group">
+									<div class="o_field_widget o_stat_info">
+										<span class="o_stat_text">Perubahan</span>
+									</div>
+								</button>
+							</div>
+							<field name="currency_id" invisible="1"/>
+							<div class="oe_title">
+								<h1><field name="name" readonly="1"/></h1>
+							</div>
+							<group>
+								<group>
+									<field name="date" readonly="1"/>
+									<field name="payment_method" readonly="1"/>
+									<field name="credit" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Kredit" readonly="1"/>
+									<field name="debit" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Debit" readonly="1"/>
+									<field name="account_id" readonly="1"/>
+									<field name="reference" readonly="1"/>
+								</group>
+							</group>
+							<group string="Keterangan">
+								<field name="note" nolabel="1" colspan="2" readonly="1"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<record id="journal_act" model="ir.actions.act_window">
+				<field name="name">Jurnal</field>
+				<field name="res_model">asm.journal</field>
+				<field name="view_mode">tree,form</field>
+				<field name="view_id" ref="asm_accounting.journal_tree_view"/>
+			</record>
+
+			<menuitem id="journal_menu" name="Jurnal" parent="asm_accounting.root_menu" action="journal_act"/>
+
+			<record id="journal_account_search_view" model="ir.ui.view">
+				<field name="name">journal_account_search_view</field>
+				<field name="model">asm.journal</field>
+				<field name="arch" type="xml">
+					<search>
+						<field name="note"/>
+						<field name="payment_method"/>
+						<field name="account_id"/>
+						<filter string="Archived" name="archived_journal" domain="[('active', '=', False)]" groups="asm_accounting.manager_group"/>
+					</search>
+				</field>
+			</record>
+
+			<record id="journal_account_tree_view" model="ir.ui.view">
+				<field name="name">journal_account_tree_view</field>
+				<field name="model">asm.journal</field>
+				<field name="arch" type="xml">
+					<tree default_order="date desc" create="false" delete="false" editable="top">
+						<field name="currency_id" invisible="1"/>
+						<field name="name"/>
+						<field name="note"/>
+						<field name="date"/>
+						<field name="payment_method"/>
+						<field name="credit" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Kredit"/>
+						<field name="debit" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Debit"/>
+						<field name="balance" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="journal_account_act" model="ir.actions.act_window">
+				<field name="name">Jurnal</field>
+				<field name="res_model">asm.journal</field>
+				<field name="view_mode">tree</field>
+				<field name="domain">[('account_id', '=', active_id)]</field>
+				<field name="view_id" ref="journal_account_tree_view"/>
+			</record>
+
+		<!-- Account View -->
+			<record id="account_act" model="ir.actions.act_window">
+				<field name="name">Akun Keuangan</field>
+				<field name="res_model">asm.account</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="account_tree_view" model="ir.ui.view">
+				<field name="name">account_tree_view</field>
+				<field name="model">asm.account</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="currency_id" invisible="1"/>
+						<field name="name"/>
+						<field name="balance" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Saldo"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="account_form_view" model="ir.ui.view">
+				<field name="name">account_form_view</field>
+				<field name="model">asm.account</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<div class="oe_button_box" name="button_box">
+								<button name="%(journal_account_act)d" type="action" icon="fa-list-ul">
+									Journals
+								</button>
+							</div>
+							<group>
+								<group>
+									<field name="name"/>
+									<field name="balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="currency_id" invisible="1"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="account_menu" name="Akun" parent="asm_accounting.root_menu" action="account_act"/>
+
+		<!-- Account  Adjustment View -->
+			<record id="account_adj_act" model="ir.actions.act_window">
+				<field name="name">Penyesuaian Akun</field>
+				<field name="res_model">as.account.adjustment</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="account_adj_tree_view" model="ir.ui.view">
+				<field name="name">account_adj_tree_view</field>
+				<field name="model">as.account.adjustment</field>
+				<field name="arch" type="xml">
+					<tree default_order="id desc">
+						<field name="currency_id" invisible="1"/>
+						<field name="name"/>
+						<field name="desc"/>
+						<field name="state"/>
+						<field name="adjust_date"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="account_adj_form_view" model="ir.ui.view">
+				<field name="name">account_adj_form_view</field>
+				<field name="model">as.account.adjustment</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<button string="Validate" type="object" name="action_validate" attrs="{'invisible': [('state', '=', 'Validated')]}" confirm="Anda akan mengubah saldo akhir sebuah akun. Anda yakin?"/>
+							<field name="state" widget="statusbar"/>
+						</header>
+						<sheet>
+							<group>
+								<label colspan="2" for="name" class="oe_edit_only"/>
+								<h1 colspan="2"><field name="name" nolabel="1"/></h1>
+								<field name="desc" attrs="{'readonly': [('state', '=', 'Validated')]}"/>
+							</group>
+							<group>
+								<group>
+									<field name="account_id" attrs="{'readonly': [('state', '=', 'Validated')]}"/>
+									<field name="current_balance"/>
+									<field name="value" attrs="{'readonly': [('state', '=', 'Validated')]}" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="adjust_date" attrs="{'invisible': [('state', '=', 'Draft')]}"/>
+									<field name="currency_id" invisible="1"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="account_adj_menu" name="Penyesuaian Akun" parent="accounting_cfg_menu" action="account_adj_act"/>
+	</data>
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+	<data>
+		<!-- Accounting Groups -->
+		<record id="category_asm_accounting" model="ir.module.category">
+			<field name="name">Accounting</field>
+		</record>
+
+		<record id="limited_group" model="res.groups">
+			<field name="name">Limited</field>
+			<field name="category_id" ref="asm_accounting.category_asm_accounting"/>
+		</record>
+
+		<record id="operator_group" model="res.groups">
+			<field name="name">Operator</field>
+			<field name="implied_ids" eval="[(4, ref('asm_accounting.limited_group'))]"/>
+			<field name="category_id" ref="asm_accounting.category_asm_accounting"/>
+		</record>
+
+		<record id="supervisor_group" model="res.groups">
+			<field name="name">Supervisor</field>
+			<field name="implied_ids" eval="[(4, ref('asm_accounting.operator_group'))]"/>
+			<field name="category_id" ref="asm_accounting.category_asm_accounting"/>
+		</record>
+
+		<record id="manager_group" model="res.groups">
+			<field name="name">Manager</field>
+			<field name="implied_ids" eval="[(4, ref('asm_accounting.supervisor_group'))]"/>
+			<field name="category_id" ref="asm_accounting.category_asm_accounting"/>
+			<field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+		</record>
+	</data>
+</odoo>

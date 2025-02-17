@@ -1,0 +1,33 @@
+<odoo>
+	<data>
+		<!-- Selection View -->
+			<record id="accounting_inherit_selection_tree" model="ir.ui.view">
+				<field name="name">accounting_inherit_selection_tree</field>
+				<field name="model">as.selection</field>
+				<field name="inherit_id" ref="asm_student.selection_tree"/>
+				<field name="arch" type="xml">
+					<field name="is_class_alt" position="after">
+						<field name="is_payment_channel"/>
+						<field name="payment_extra_fee"/>
+						<field name="payment_cut_fee" widget="percentage"/>
+					</field>
+					<tree position="attributes">
+						<attribute name="default_order">is_religion desc, is_address_type desc, is_transportation_type desc, is_education_level desc, is_work_field desc, is_income_rate desc, is_special_needs desc, is_class_stage desc, is_class_alt desc, is_payment_channel desc</attribute>
+					</tree>
+				</field>
+			</record>
+
+			<record id="accounting_inherit_selection_form" model="ir.ui.view">
+				<field name="name">accounting_inherit_selection_form</field>
+				<field name="model">as.selection</field>
+				<field name="inherit_id" ref="asm_student.selection_form"/>
+				<field name="arch" type="xml">
+					<field name="is_class_alt" position="after">
+						<field name="is_payment_channel"/>
+						<field name="payment_extra_fee"/>
+						<field name="payment_cut_fee" widget="percentage"/>
+					</field>
+				</field>
+			</record>
+	</data>
+</odoo>

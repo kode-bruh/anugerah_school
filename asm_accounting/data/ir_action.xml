@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="recalculate_journal_balance" model="ir.actions.server">
+            <field name="name">Recalculate Balance</field>
+            <field name="model_id" ref="asm_accounting.model_asm_journal"/>
+            <field name="state">code</field>
+            <field name="binding_model_id" ref="asm_accounting.model_asm_journal"/>
+            <field name="code">
+for rec in records:
+    rec.recalculate_journal_balance()
+            </field>
+        </record>
+    </data>
+</odoo>

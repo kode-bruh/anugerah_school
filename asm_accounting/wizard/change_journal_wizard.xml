@@ -1,0 +1,46 @@
+<odoo>
+	<data>
+        <record id="change_journal_act" model="ir.actions.act_window">
+            <field name="name">Modify Journal</field>
+            <field name="res_model">as.change_journal.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="asm_accounting.model_asm_journal"/>
+            <field name="groups_id" eval="[(4, ref('asm_accounting.manager_group'))]"/>
+        </record>
+
+        <record id="change_journal_form_view" model="ir.ui.view">
+            <field name="name">change_journal_form_view</field>
+            <field name="model">as.change_journal.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Modify Journal">
+                    <field name="item_ids">
+                    	<tree editable="top" create="false" delete="false">
+                    		<field name="wizard_id" invisible="1"/>
+							<field name="journal_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							<field name="note"/>
+                    	</tree>
+                    </field>
+                    <footer>
+                        <button string="Ubah Jurnal" name="validate_change" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="change_journal_line_tree_view" model="ir.ui.view">
+            <field name="name">change_journal_line_tree_view</field>
+            <field name="model">as.change_journal.line</field>
+            <field name="arch" type="xml">
+            	<tree create="false" delete="false" edit="false">
+            		<field name="user_id"/>
+					<field name="approved_date"/>
+            		<field name="approved_date"/>
+					<field name="journal_id"/>
+					<field name="note"/>
+            	</tree>
+            </field>
+        </record>
+	</data>
+</odoo>
