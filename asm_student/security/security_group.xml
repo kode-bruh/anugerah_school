@@ -1,0 +1,32 @@
+<odoo>
+	<data>
+		<!-- Student Management Groups -->
+		<record id="category_asm_student" model="ir.module.category">
+			<field name="name">Student Management</field>
+		</record>
+
+		<record id="limited_group" model="res.groups">
+			<field name="name">Limited</field>
+			<field name="category_id" ref="asm_student.category_asm_student"/>
+		</record>
+
+		<record id="operator_group" model="res.groups">
+			<field name="name">Operator</field>
+			<field name="implied_ids" eval="[(4, ref('asm_student.limited_group'))]"/>
+			<field name="category_id" ref="asm_student.category_asm_student"/>
+		</record>
+
+		<record id="supervisor_group" model="res.groups">
+			<field name="name">Supervisor</field>
+			<field name="implied_ids" eval="[(4, ref('asm_student.operator_group'))]"/>
+			<field name="category_id" ref="asm_student.category_asm_student"/>
+		</record>
+
+		<record id="manager_group" model="res.groups">
+			<field name="name">Manager</field>
+			<field name="implied_ids" eval="[(4, ref('asm_student.supervisor_group'))]"/>
+			<field name="category_id" ref="asm_student.category_asm_student"/>
+			<field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+		</record>
+	</data>
+</odoo>

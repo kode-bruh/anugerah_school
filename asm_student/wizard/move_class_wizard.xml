@@ -1,0 +1,38 @@
+<odoo>
+	<data>
+		<record id="move_class_wiz_form" model="ir.ui.view">
+			<field name="name">move_class_wiz_form</field>
+			<field name="model">as.move_class.wiz</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<label for="student_id"/>
+						<div class="oe_title">
+							<h1><field name="student_id" options="{'no_create_edit': 1, 'no_create': 1}"/></h1>
+						</div>
+						<group>
+							<group>
+								<label for="current_class" string="Pindah Kelas"/>
+								<div class="o_row">
+									<span><field name="current_class"/></span>
+									<span><i class="fa fa-arrow-right"></i></span>
+									<span><field name="next_class" options="{'no_create_edit': 1, 'no_create': 1}"/></span>
+								</div>
+								<field name="term_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+								<!-- <label for="year_in" string="Tahun Ajaran"/>
+								<div class="o_row">
+									<span><field name="year_in"/></span>
+									<span>-</span>
+									<span><field name="year_out"/></span>
+								</div> -->
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button string="Confirm" type="object" name="validate" class="oe_highlight"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

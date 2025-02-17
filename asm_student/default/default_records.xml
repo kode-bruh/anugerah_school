@@ -1,0 +1,616 @@
+<odoo>
+	<data>
+		<record id="religion_a" model="as.selection">
+			<field name="name">Islam</field>
+			<field name="value">01</field>
+			<field name="is_religion">True</field>
+		</record>
+		<record id="religion_b" model="as.selection">
+			<field name="name">Kristen/Protestan</field>
+			<field name="value">02</field>
+			<field name="is_religion">True</field>
+		</record>
+		<record id="religion_c" model="as.selection">
+			<field name="name">Katolik</field>
+			<field name="value">03</field>
+			<field name="is_religion">True</field>
+		</record>
+		<record id="religion_d" model="as.selection">
+			<field name="name">Hindhu</field>
+			<field name="value">04</field>
+			<field name="is_religion">True</field>
+		</record>
+		<record id="religion_h" model="as.selection">
+			<field name="name">Budha</field>
+			<field name="value">05</field>
+			<field name="is_religion">True</field>
+		</record>
+		<record id="religion_i" model="as.selection">
+			<field name="name">Khonghucu</field>
+			<field name="value">06</field>
+			<field name="is_religion">True</field>
+		</record>
+		<record id="religion_j" model="as.selection">
+			<field name="name">Kepercayaan Terhadap Tuhan YME</field>
+			<field name="value">07</field>
+			<field name="is_religion">True</field>
+		</record>
+
+		<record id="address_type_a" model="as.selection">
+			<field name="name">Bersama Orang Tua</field>
+			<field name="value">01</field>
+			<field name="is_address_type">True</field>
+		</record>
+		<record id="address_type_b" model="as.selection">
+			<field name="name">Wali</field>
+			<field name="value">02</field>
+			<field name="is_address_type">True</field>
+		</record>
+		<record id="address_type_c" model="as.selection">
+			<field name="name">Kos</field>
+			<field name="value">03</field>
+			<field name="is_address_type">True</field>
+		</record>
+		<record id="address_type_d" model="as.selection">
+			<field name="name">Asrama</field>
+			<field name="value">04</field>
+			<field name="is_address_type">True</field>
+		</record>
+		<record id="address_type_e" model="as.selection">
+			<field name="name">Panti Asuhan</field>
+			<field name="value">05</field>
+			<field name="is_address_type">True</field>
+		</record>
+		<record id="address_type_f" model="as.selection">
+			<field name="name">Lainnya</field>
+			<field name="value">99</field>
+			<field name="is_address_type">True</field>
+		</record>
+
+		<record id="is_transportation_type_a" model="as.selection">
+			<field name="name">Jalan Kaki</field>
+			<field name="value">01</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_b" model="as.selection">
+			<field name="name">Kendaraan Pribadi</field>
+			<field name="value">02</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_c" model="as.selection">
+			<field name="name">Kendaraan Umum/Angkot/Pete-Pete</field>
+			<field name="value">03</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_d" model="as.selection">
+			<field name="name">Jemputan Sekolah</field>
+			<field name="value">04</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_e" model="as.selection">
+			<field name="name">Kereta Api</field>
+			<field name="value">05</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_f" model="as.selection">
+			<field name="name">Ojek</field>
+			<field name="value">06</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_g" model="as.selection">
+			<field name="name">Andong/Bendi/Sado/Dokar/Delman/Beca</field>
+			<field name="value">07</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_i" model="as.selection">
+			<field name="name">Perahu Penyebrangan/Rakit/Getek</field>
+			<field name="value">08</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+		<record id="is_transportation_type_j" model="as.selection">
+			<field name="name">Lainnya</field>
+			<field name="value">99</field>
+			<field name="is_transportation_type">True</field>
+		</record>
+
+		<record id="is_education_level_a" model="as.selection">
+			<field name="name">Tidak Sekolah</field>
+			<field name="value">01</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_b" model="as.selection">
+			<field name="name">Putus SD</field>
+			<field name="value">02</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_c" model="as.selection">
+			<field name="name">SD Sederajat</field>
+			<field name="value">03</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_d" model="as.selection">
+			<field name="name">SMP Sederajat</field>
+			<field name="value">04</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_e" model="as.selection">
+			<field name="name">SMA Sederajat</field>
+			<field name="value">05</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_f" model="as.selection">
+			<field name="name">D1</field>
+			<field name="value">06</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_g" model="as.selection">
+			<field name="name">D2</field>
+			<field name="value">07</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_h" model="as.selection">
+			<field name="name">D3</field>
+			<field name="value">08</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_i" model="as.selection">
+			<field name="name">D4/S1</field>
+			<field name="value">09</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_j" model="as.selection">
+			<field name="name">S2</field>
+			<field name="value">10</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_k" model="as.selection">
+			<field name="name">S3</field>
+			<field name="value">11</field>
+			<field name="is_education_level">True</field>
+		</record>
+		<record id="is_education_level_l" model="as.selection">
+			<field name="name">Lainnya</field>
+			<field name="value">99</field>
+			<field name="is_education_level">True</field>
+		</record>
+
+		<record id="is_work_field_a" model="as.selection">
+			<field name="name">Tidak Bekerja</field>
+			<field name="value">01</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_b" model="as.selection">
+			<field name="name">Nelayan</field>
+			<field name="value">02</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_c" model="as.selection">
+			<field name="name">Petani</field>
+			<field name="value">03</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_d" model="as.selection">
+			<field name="name">Peternak</field>
+			<field name="value">04</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_e" model="as.selection">
+			<field name="name">PNS/TNI/Polri</field>
+			<field name="value">05</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_f" model="as.selection">
+			<field name="name">Karyawan Swasta</field>
+			<field name="value">06</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_g" model="as.selection">
+			<field name="name">Pedagang Kecil</field>
+			<field name="value">07</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_h" model="as.selection">
+			<field name="name">Pedagang Besar</field>
+			<field name="value">08</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_i" model="as.selection">
+			<field name="name">Wiraswasta</field>
+			<field name="value">09</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_j" model="as.selection">
+			<field name="name">Wirausaha</field>
+			<field name="value">10</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_k" model="as.selection">
+			<field name="name">Buruh</field>
+			<field name="value">11</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_l" model="as.selection">
+			<field name="name">Pensiunan</field>
+			<field name="value">12</field>
+			<field name="is_work_field">True</field>
+		</record>
+		<record id="is_work_field_m" model="as.selection">
+			<field name="name">Lainnya</field>
+			<field name="value">99</field>
+			<field name="is_work_field">True</field>
+		</record>
+
+		<record id="is_income_rate_a" model="as.selection">
+			<field name="name">&lt; Rp.500.000</field>
+			<field name="value">01</field>
+			<field name="is_income_rate">True</field>
+		</record>
+		<record id="is_income_rate_b" model="as.selection">
+			<field name="name">Rp.500.000 - Rp.999.999</field>
+			<field name="value">02</field>
+			<field name="is_income_rate">True</field>
+		</record>
+		<record id="is_income_rate_c" model="as.selection">
+			<field name="name">Rp.1.000.000 - Rp.1.999.999</field>
+			<field name="value">03</field>
+			<field name="is_income_rate">True</field>
+		</record>
+		<record id="is_income_rate_d" model="as.selection">
+			<field name="name">Rp.2.000.000 - Rp.4.999.999</field>
+			<field name="value">04</field>
+			<field name="is_income_rate">True</field>
+		</record>
+		<record id="is_income_rate_e" model="as.selection">
+			<field name="name">Rp.5.000.000 - Rp.20.000.000</field>
+			<field name="value">05</field>
+			<field name="is_income_rate">True</field>
+		</record>
+		<record id="is_income_rate_f" model="as.selection">
+			<field name="name">&gt; Rp.20.000.000</field>
+			<field name="value">06</field>
+			<field name="is_income_rate">True</field>
+		</record>
+		<record id="is_income_rate_g" model="as.selection">
+			<field name="name">Tidak Berpenghasilan</field>
+			<field name="value">07</field>
+			<field name="is_income_rate">True</field>
+		</record>
+
+		<record id="is_special_needs_a" model="as.selection">
+			<field name="name">Tidak Ada</field>
+			<field name="value">none</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_b" model="as.selection">
+			<field name="name">Netra</field>
+			<field name="value">A</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_c" model="as.selection">
+			<field name="name">Rungu</field>
+			<field name="value">B</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_d" model="as.selection">
+			<field name="name">Grahita Ringan</field>
+			<field name="value">C</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_e" model="as.selection">
+			<field name="name">Grahita Sedang</field>
+			<field name="value">D</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_f" model="as.selection">
+			<field name="name">Daksa Ringan</field>
+			<field name="value">E</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_g" model="as.selection">
+			<field name="name">Daksa Sedang</field>
+			<field name="value">F</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_h" model="as.selection">
+			<field name="name">Laras</field>
+			<field name="value">G</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_i" model="as.selection">
+			<field name="name">Wicara</field>
+			<field name="value">H</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_j" model="as.selection">
+			<field name="name">Tuna Ganda</field>
+			<field name="value">I</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_k" model="as.selection">
+			<field name="name">Hiper Aktif</field>
+			<field name="value">J</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_l" model="as.selection">
+			<field name="name">Cerdas Istimewa</field>
+			<field name="value">K</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_m" model="as.selection">
+			<field name="name">Bakat Istimewa</field>
+			<field name="value">L</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_n" model="as.selection">
+			<field name="name">Kesulitan Belajar</field>
+			<field name="value">M</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_o" model="as.selection">
+			<field name="name">Narkoba</field>
+			<field name="value">N</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_p" model="as.selection">
+			<field name="name">Indigo</field>
+			<field name="value">O</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_q" model="as.selection">
+			<field name="name">Down Syndrome</field>
+			<field name="value">P</field>
+			<field name="is_special_needs">True</field>
+		</record>
+		<record id="is_special_needs_r" model="as.selection">
+			<field name="name">Autisme</field>
+			<field name="value">Q</field>
+			<field name="is_special_needs">True</field>
+		</record>
+
+		<record id="is_class_stage_a" model="as.selection">
+			<field name="name">PGA</field>
+			<field name="value">-4</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_b" model="as.selection">
+			<field name="name">PGB</field>
+			<field name="value">-3</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_c" model="as.selection">
+			<field name="name">TKA</field>
+			<field name="value">-2</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_d" model="as.selection">
+			<field name="name">TKB</field>
+			<field name="value">-1</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_e" model="as.selection">
+			<field name="name">I</field>
+			<field name="value">1</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_f" model="as.selection">
+			<field name="name">II</field>
+			<field name="value">2</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_g" model="as.selection">
+			<field name="name">III</field>
+			<field name="value">3</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_h" model="as.selection">
+			<field name="name">IV</field>
+			<field name="value">4</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_i" model="as.selection">
+			<field name="name">V</field>
+			<field name="value">5</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_j" model="as.selection">
+			<field name="name">VI</field>
+			<field name="value">6</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_k" model="as.selection">
+			<field name="name">VII</field>
+			<field name="value">7</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_l" model="as.selection">
+			<field name="name">VIII</field>
+			<field name="value">8</field>
+			<field name="is_class_stage">True</field>
+		</record>
+		<record id="is_class_stage_m" model="as.selection">
+			<field name="name">IX</field>
+			<field name="value">9</field>
+			<field name="is_class_stage">True</field>
+		</record>
+
+		<record id="is_class_alt_a" model="as.selection">
+			<field name="name">1</field>
+			<field name="value">1</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_b" model="as.selection">
+			<field name="name">2</field>
+			<field name="value">2</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_c" model="as.selection">
+			<field name="name">3</field>
+			<field name="value">3</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_d" model="as.selection">
+			<field name="name">4</field>
+			<field name="value">4</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_e" model="as.selection">
+			<field name="name">5</field>
+			<field name="value">5</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_f" model="as.selection">
+			<field name="name">A</field>
+			<field name="value">A</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_g" model="as.selection">
+			<field name="name">B</field>
+			<field name="value">B</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_h" model="as.selection">
+			<field name="name">C</field>
+			<field name="value">C</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_i" model="as.selection">
+			<field name="name">D</field>
+			<field name="value">D</field>
+			<field name="is_class_alt">True</field>
+		</record>
+		<record id="is_class_alt_j" model="as.selection">
+			<field name="name">E</field>
+			<field name="value">E</field>
+			<field name="is_class_alt">True</field>
+		</record>
+	</data>
+
+	<data>
+		<record id="class_stage_a" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_a"/>
+		</record>
+		<record id="class_stage_b" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_b"/>
+		</record>
+		<record id="class_stage_c" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_c"/>
+		</record>
+		<record id="class_stage_d" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_d"/>
+		</record>
+		<record id="class_stage_e" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_e"/>
+		</record>
+		<record id="class_stage_f" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_f"/>
+		</record>
+		<record id="class_stage_g" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_g"/>
+		</record>
+		<record id="class_stage_h" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_h"/>
+		</record>
+		<record id="class_stage_i" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_i"/>
+		</record>
+		<record id="class_stage_j" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_j"/>
+		</record>
+		<record id="class_stage_k" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_k"/>
+		</record>
+		<record id="class_stage_l" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_l"/>
+		</record>
+		<record id="class_stage_m" model="asm.class.stage">
+			<field name="name" ref="asm_student.is_class_stage_m"/>
+		</record>
+	</data>
+
+	<data>
+		<record id="term_2010_2011" model="asm.term">
+			<field name="year_in">2010</field>
+			<field name="year_out">2011</field>
+		</record>
+
+		<record id="term_2011_2012" model="asm.term">
+			<field name="year_in">2011</field>
+			<field name="year_out">2012</field>
+		</record>
+
+		<record id="term_2012_2013" model="asm.term">
+			<field name="year_in">2012</field>
+			<field name="year_out">2013</field>
+		</record>
+
+		<record id="term_2013_2014" model="asm.term">
+			<field name="year_in">2013</field>
+			<field name="year_out">2014</field>
+		</record>
+
+		<record id="term_2014_2015" model="asm.term">
+			<field name="year_in">2014</field>
+			<field name="year_out">2015</field>
+		</record>
+
+		<record id="term_2015_2016" model="asm.term">
+			<field name="year_in">2015</field>
+			<field name="year_out">2016</field>
+		</record>
+
+		<record id="term_2016_2017" model="asm.term">
+			<field name="year_in">2016</field>
+			<field name="year_out">2017</field>
+		</record>
+
+		<record id="term_2017_2018" model="asm.term">
+			<field name="year_in">2017</field>
+			<field name="year_out">2018</field>
+		</record>
+
+		<record id="term_2018_2019" model="asm.term">
+			<field name="year_in">2018</field>
+			<field name="year_out">2019</field>
+		</record>
+
+		<record id="term_2019_2020" model="asm.term">
+			<field name="year_in">2019</field>
+			<field name="year_out">2020</field>
+		</record>
+
+		<record id="term_2020_2021" model="asm.term">
+			<field name="year_in">2020</field>
+			<field name="year_out">2021</field>
+		</record>
+
+		<record id="term_2021_2022" model="asm.term">
+			<field name="year_in">2021</field>
+			<field name="year_out">2022</field>
+		</record>
+
+		<record id="term_2022_2023" model="asm.term">
+			<field name="year_in">2022</field>
+			<field name="year_out">2023</field>
+		</record>
+
+		<record id="term_2023_2024" model="asm.term">
+			<field name="year_in">2023</field>
+			<field name="year_out">2024</field>
+		</record>
+
+		<record id="term_2024_2025" model="asm.term">
+			<field name="year_in">2024</field>
+			<field name="year_out">2025</field>
+		</record>
+
+		<record id="term_2025_2026" model="asm.term">
+			<field name="year_in">2025</field>
+			<field name="year_out">2026</field>
+		</record>
+
+		<record id="term_2026_2027" model="asm.term">
+			<field name="year_in">2026</field>
+			<field name="year_out">2027</field>
+		</record>
+	</data>
+</odoo>

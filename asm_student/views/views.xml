@@ -1,0 +1,609 @@
+<odoo>
+	<data>
+		<!-- General Menu -->
+			<menuitem id="asm_student.root_menu" name="Data Siswa"/>
+			<menuitem id="transfer_menu" parent="asm_student.root_menu" name="Perpindahan" sequence="2"/>
+			<menuitem id="student_parent_menu" parent="asm_student.root_menu" name="Siswa" sequence="1"/>
+			<menuitem id="student_cfg_menu" parent="asm_student.root_menu" name="Konfigurasi" sequence="300"/>
+
+		<!-- Term view -->
+			<record id="term_act" model="ir.actions.act_window">
+				<field name="name">Tahun Ajaran</field>
+				<field name="res_model">asm.term</field>
+				<field name="view_mode">tree</field>
+			</record>
+
+			<record id="term_tree" model="ir.ui.view">
+				<field name="name">term_tree_view</field>
+				<field name="model">asm.term</field>
+				<field name="arch" type="xml">
+					<tree default_order="year_in desc" editable="top">
+						<field name="year_in"/>
+						<field name="year_out"/>
+					</tree>
+				</field>
+			</record>
+
+			<menuitem id="term_menu" name="Tahun Ajaran" parent="student_cfg_menu" action="term_act" sequence="30"/>
+
+		<!-- Student View -->
+			<record id="student_act" model="ir.actions.act_window">
+				<field name="name">Data Siswa</field>
+				<field name="res_model">asm.student</field>
+				<field name="view_mode">tree,form</field>
+				<field name="context">{'search_default_active_student': 1}</field>
+				<field name="domain">[('active', '=', True)]</field>
+			</record>
+
+			<record id="student_inactive_act" model="ir.actions.act_window">
+				<field name="name">Data Siswa Archived</field>
+				<field name="res_model">asm.student</field>
+				<field name="view_mode">tree,form</field>
+				<field name="domain">[('active', '=', False)]</field>
+			</record>
+
+			<record id="student_search" model="ir.ui.view">
+				<field name="name">student_search_view</field>
+				<field name="model">asm.student</field>
+				<field name="arch" type="xml">
+					<search>
+						<field name="full_name"/>
+						<field name="nias"/>
+						<field name="current_class"/>
+						<filter string="Pendaftar" name="register_student" domain="[('state_id', 'ilike', 'Pendaftar')]"/>
+						<filter string="Siswa" name="active_student" domain="[('state_id', 'ilike', 'Siswa')]"/>
+						<filter string="Siswa Tidak Aktif" name="inactive_student" domain="['!', ('state_id', 'ilike', 'Siswa'), '!', ('state_id', 'ilike', 'Pendaftar')]"/>
+					</search>
+				</field>
+			</record>
+			<record id="student_tree" model="ir.ui.view">
+				<field name="name">student_tree_view</field>
+				<field name="model">asm.student</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="active" invisible="1"/>
+						<field name="full_name"/>
+						<field name="current_class"/>
+						<field name="state_id"/>
+						<field name="nias"/>
+						<field name="nipd"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="student_form" model="ir.ui.view">
+				<field name="name">student_form_view</field>
+				<field name="model">asm.student</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<field name="state_id" widget="statusbar"/>
+							<field name="active" invisible="1"/>
+						</header>
+						<sheet>
+							<label for="full_name"/>
+							<div class="oe_title">
+								<h1><field name="full_name"/></h1>
+							</div>
+							<notebook>
+								<page string="Data Umum" name="general_info">
+									<group>
+										<group string="Data Siswa">
+											<field name="gender"/>
+											<field name="birth_place"/>
+											<field name="birth_date"/>
+											<field name="religion" options="{'no_create': 1, 'no_create_edit': 1}"/>
+										</group>
+										<group string="Data Administrasi">
+											<field name="nipd"/>
+											<field name="nias"/>
+											<field name="nisn"/>
+											<field name="nik"/>
+										</group>
+										<group string="Data Lain">
+											<field name="birth_cert_number"/>
+											<field name="child_number"/>
+											<field name="sibling_count"/>
+										</group>
+									</group>
+								</page>
+								<page string="Data Alamat"  name="address_info" groups="asm_student.operator_group">
+									<group>
+										<group string="Alamat Siswa">
+											<label for="address" string="Alamat"/>
+											<div>
+												<field name="address" style="max-width: 50%" placeholder="Alamat"/>
+												<field name="rt" style="max-width: 15%" placeholder="RT"/>
+												<field name="rw" style="max-width: 15%" placeholder="RW"/>
+												<field name="zip_code" style="max-width: 20%" placeholder="Kode Pos"/>
+											</div>
+											<field name="village"/>
+											<field name="sub_district"/>
+											<field name="district"/>
+										</group>
+										<group string="Data Lain">
+											<field name="address_type" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="transportation" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<label for="latitude" string="Koordinat"/>
+											<div>
+												<field name="latitude" style="max-width: 50%"/>
+												<field name="longitude" style="max-width: 50%"/>
+											</div>
+										</group>
+									</group>
+								</page>
+								<page string="Data Keluarga"  name="family_info" groups="asm_student.operator_group">
+									<group>
+										<group string="Data Ayah">
+											<field name="father_name"/>
+											<field name="father_nik"/>
+											<field name="father_birth_year"/>
+											<field name="father_education" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="father_work" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="father_income" options="{'no_create': 1, 'no_create_edit': 1}"/>
+										</group>
+										<group string="Data Ibu">
+											<field name="mother_name"/>
+											<field name="mother_nik"/>
+											<field name="mother_birth_year"/>
+											<field name="mother_education" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="mother_work" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="mother_income" options="{'no_create': 1, 'no_create_edit': 1}"/>
+										</group>
+										<group string="Data Wali">
+											<field name="guardian_name"/>
+											<field name="guardian_nik"/>
+											<field name="guardian_birth_year"/>
+											<field name="guardian_education" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="guardian_work" options="{'no_create': 1, 'no_create_edit': 1}"/>
+											<field name="guardian_income" options="{'no_create': 1, 'no_create_edit': 1}"/>
+										</group>
+										<group string="Data Lain">
+											<field name="home_phone_number"/>
+											<field name="cellphone_number"/>
+											<field name="email"/>
+										</group>
+									</group>
+								</page>
+								<page string="Data Khusus"  name="other_info" groups="asm_student.operator_group">
+									<group>
+										<group string="Data Jasmani">
+											<field name="weight"/>
+											<field name="height"/>
+											<field name="head_circumference"/>
+										</group>
+										<group string="Data Khusus">
+											<field name="receive_kps"/>
+											<field name="kps_number"/>
+											<field name="kks_number"/>
+											<field name="needs_pip"/>
+											<field name="reason_need_pip"/>
+											<field name="special_needs" options="{'no_create': 1, 'no_create_edit': 1}"/>
+										</group>
+										<group string="Data Dokumen">
+											<field name="previous_school"/>
+											<field name="national_exam_number"/>
+											<field name="skhun_number"/>
+											<field name="diploma_number"/>
+											<field name="receive_kip"/>
+											<field name="kip_number"/>
+											<field name="kip_behalf_name"/>
+											<field name="kk"/>
+										</group>
+									</group>
+								</page>
+								<page string="Data Kelas" name="class_info">
+									<group>
+										<group string="Kelas Siswa">
+											<field name="current_class"/>
+											<button string="Pindah Kelas" type="object" name="action_move_class" class="w-100 btn-secondary" groups="asm_student.operator_group"/>
+										</group>
+									</group>
+									<group string="Jejak Kelas Siswa">
+										<field name="student_class_ids" colspan="2" nolabel="1" readonly="1"/>
+										<button string="Perbaiki Kelas" type="object" name="action_change_class" class="w-100 btn-secondary" groups="asm_student.manager_group" colspan="2" />
+									</group>
+								</page>
+							</notebook>
+							<group>
+								<field name="server_url" widget="url"/>
+							</group>
+						</sheet>
+						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+						</div>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="student_menu" name="Siswa" parent="student_parent_menu" action="student_act" sequence="10"/>
+			<menuitem id="inactive_student_menu" name="Archived" parent="student_parent_menu" action="student_inactive_act" sequence="100" groups="asm_student.manager_group"/>
+
+		<!-- Selection View -->
+			<record id="selection_act" model="ir.actions.act_window">
+				<field name="name">Opsi Pilihan</field>
+				<field name="res_model">as.selection</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="selection_tree" model="ir.ui.view">
+				<field name="name">selection_tree_view</field>
+				<field name="model">as.selection</field>
+				<field name="arch" type="xml">
+					<tree default_order="is_religion desc, is_address_type desc, is_transportation_type desc, is_education_level desc, is_work_field desc, is_income_rate desc, is_special_needs desc, is_class_stage desc, is_class_alt desc">
+						<field name="name"/>
+						<field name="value"/>
+						<field name="is_religion" string="Agama"/>
+						<field name="is_address_type" string="Alamat"/>
+						<field name="is_transportation_type" string="Transportasi"/>
+						<field name="is_education_level" string="Edukasi"/>
+						<field name="is_work_field" string="Pekerjaan"/>
+						<field name="is_income_rate" string="Penghasilan"/>
+						<field name="is_special_needs" string="Kebutuhan"/>
+						<field name="is_class_stage" string="Kelas"/>
+						<field name="is_class_alt" string="Sub-Kelas"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="selection_form" model="ir.ui.view">
+				<field name="name">selection_form_view</field>
+				<field name="model">as.selection</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<group>
+								<field name="name"/>
+								<field name="value"/>
+							</group>
+							<group>
+								<h3 colspan="2">Centanglah pilihan yang sesuai dengan opsi di kolom nama.</h3>
+								<field name="is_religion"/>
+								<field name="is_address_type"/>
+								<field name="is_transportation_type"/>
+								<field name="is_education_level"/>
+								<field name="is_work_field"/>
+								<field name="is_income_rate"/>
+								<field name="is_special_needs"/>
+								<field name="is_class_stage"/>
+								<field name="is_class_alt"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="selection_menu" name="Opsi Pilihan" parent="student_cfg_menu" action="selection_act" sequence="10"/>
+
+		<!-- Class Stage View -->
+			<record id="class_stage_act" model="ir.actions.act_window">
+				<field name="name">Jenjang Kelas</field>
+				<field name="res_model">asm.class.stage</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="class_stage_tree" model="ir.ui.view">
+				<field name="name">class_stage_tree_view</field>
+				<field name="model">asm.class.stage</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="name"/>
+						<field name="class_ids"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="class_stage_form" model="ir.ui.view">
+				<field name="name">class_stage_form_view</field>
+				<field name="model">asm.class.stage</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<label for="name"/>
+							<div class="oe_title">
+								<h1>
+									<field name="name" options="{'no_create_edit': 1, 'no_create': 1}"/>
+								</h1>
+							</div>
+							<group string="Kelas">
+								<field name="class_ids" colspan="2" nolabel="1"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="class_stage_menu" name="Jenjang" parent="student_cfg_menu" action="class_stage_act" sequence="20"/>	
+
+		<!-- Class View -->
+			<record id="class_act" model="ir.actions.act_window">
+				<field name="name">Kelas</field>
+				<field name="res_model">asm.class</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="class_tree" model="ir.ui.view">
+				<field name="name">class_tree_view</field>
+				<field name="model">asm.class</field>
+				<field name="arch" type="xml">
+					<tree default_order="priority desc">
+						<field name="name"/>
+						<field name="class_stage_id"/>
+						<field name="priority"/>
+						<field name="note"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="class_form" model="ir.ui.view">
+				<field name="name">class_form_view</field>
+				<field name="model">asm.class</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<label for="name" class='oe_edit_only'/>
+							<div class="oe_title">
+								<h1>
+									<field name="name" readonly="1"/>
+								</h1>
+							</div>
+							<group>
+								<group>
+									<field name="class_stage_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="priority"/>
+									<label for="stage"/>
+									<div>
+										<field name="stage" style="max-width: 50%" options="{'no_create': 1, 'no_create_edit': 1}"/>
+										<field name="alt" style="max-width: 50%" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									</div>
+								</group>
+							</group>
+							<group>
+								<field name="note"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="class_menu" name="Kelas" parent="student_cfg_menu" action="class_act" sequence="30"/>
+
+		<!-- Class Student View -->
+			<record id="class_student_act" model="ir.actions.act_window">
+				<field name="name">Siswa per Tahun Ajaran</field>
+				<field name="res_model">as.class_student</field>
+				<field name="view_mode">tree</field>
+			</record>
+
+			<record id="class_student_tree" model="ir.ui.view">
+				<field name="name">class_student_tree_view</field>
+				<field name="model">as.class_student</field>
+				<field name="arch" type="xml">
+					<tree default_order="year_in desc" create="false" edit="false">
+						<field name="student_id"/>
+						<field name="class_id"/>
+						<field name="term_id"/>
+						<field name="year_in" groups="base.group_no_one"/>
+						<field name="year_out" groups="base.group_no_one"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="class_student_form" model="ir.ui.view">
+				<field name="name">class_student_form_view</field>
+				<field name="model">as.class_student</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<label for="student_id"/>
+							<div class="oe_title">
+								<h1><field name="student_id" readonly="1"/></h1>
+							</div>
+							<group>
+								<group>
+									<field name="class_id" readonly="1"/>
+									<field name="term_id"/>
+									<field name="year_in" groups="base.group_no_one"/>
+									<field name="year_out" groups="base.group_no_one"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="class_student_menu" name="Siswa/Tahun" parent="student_parent_menu" action="class_student_act" sequence="20"/>
+
+		<!-- Student Transfer View -->
+			<record id="student_transfer_act" model="ir.actions.act_window">
+				<field name="name">Perpindahan Siswa</field>
+				<field name="res_model">as.student_transfer</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="student_transfer_tree" model="ir.ui.view">
+				<field name="name">student_transfer_tree_view</field>
+				<field name="model">as.student_transfer</field>
+				<field name="arch" type="xml">
+					<tree default_order="id desc">
+						<field name="name"/>
+						<field name="year_in" groups="base.group_no_one"/>
+						<field name="year_out" groups="base.group_no_one"/>
+						<field name="term_id"/>
+						<field name="validate_uid"/>
+						<field name="state"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="student_transfer_form" model="ir.ui.view">
+				<field name="name">student_transfer_form_view</field>
+				<field name="model">as.student_transfer</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<button string="Confirm" class="oe_highlight" type="object" name="action_confirm" attrs="{'invisible': [('state', '!=', 'Draft')]}"/>
+							<button string="Validate" class="oe_highlight" type="object" name="action_validate" attrs="{'invisible': [('state', '!=', 'Waiting')]}"/>
+							<button string="Cancel" type="object" name="action_cancel" attrs="{'invisible': [('state', '=', 'Cancelled')]}" confirm="Apa Anda yakin ingin mengembalikan kelas siswa seperti semula?"/>
+							<button string="Set to Draft" type="object" name="action_draft" attrs="{'invisible': [('state', '!=', 'Cancelled')]}"/>
+							<field name="state" widget="statusbar"/>
+						</header>
+						<sheet>
+							<div class="oe_title">
+								<h1>
+									<field name="name" readonly="1"/>
+								</h1>
+							</div>
+							<group>
+								<group>
+									<field name="allow_class_transfer"/>
+									<div class="alert alert-info" colspan="2" attrs="{'invisible': [('allow_class_transfer', '=', False)]}">
+										<i class="fa fa-info"></i> Gunakan field di kanan untuk mengambil data siswa-siswa dengan kelas dan tahun ajaran yang ditentukan.
+									</div>
+									<separator/>
+									<field name="term_id" string="Tahun Ajaran Selanjutnya" required="1" options="{'no_create': 1, 'no_create_edit': 1}"/>
+								</group>
+								<group attrs="{'invisible': [('allow_class_transfer', '=', False)]}">
+									<label for="select_term_id" string="Ambil Siswa"/>
+									<div class="o_row">
+										<div><field name="class_id" placeholder="Kelas" attrs="{'required': [('allow_class_transfer', '=', True)]}" options="{'no_create': 1, 'no_create_edit': 1}"/></div>
+										<div><field name="select_term_id" placeholder="Tahun Ajaran" attrs="{'required': [('allow_class_transfer', '=', True)]}" options="{'no_create': 1, 'no_create_edit': 1}"/></div>
+									</div>
+									<button string="Ambil Siswa" class="oe_highlight" colspan="2" type="object" name="populate_student_class" attrs="{'invisible': [('allow_class_transfer', '=', False)]}"/>
+								</group>
+								<group attrs="{'invisible': [('state', '!=', 'Validated')]}">
+									<field name="validate_uid"/>
+									<field name="validate_date"/>
+								</group>
+								<field name="item_ids" attrs="{'readonly': [('state', '!=', 'Draft')]}"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="student_transfer_menu" name="Perpindahan Kelas" parent="transfer_menu" action="student_transfer_act"/>
+
+		<!-- Student Transfer Item View -->
+			<record id="student_transfer_item_tree" model="ir.ui.view">
+				<field name="name">student_transfer_item_tree_view</field>
+				<field name="model">as.student_transfer_item</field>
+				<field name="arch" type="xml">
+					<tree editable="top">
+						<field name="student_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+						<field name="current_class"/>
+						<field name="next_class" required="1" options="{'no_create': 1, 'no_create_edit': 1}"/>
+					</tree>
+				</field>
+			</record>
+
+		<!-- State View -->
+			<record id="state_act" model="ir.actions.act_window">
+				<field name="name">Status</field>
+				<field name="res_model">asm.state</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="state_tree" model="ir.ui.view">
+				<field name="name">state_tree_view</field>
+				<field name="model">asm.state</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="name"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="state_form" model="ir.ui.view">
+				<field name="name">state_form_view</field>
+				<field name="model">asm.state</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<group>
+								<field name="name"/>
+								<field name="default"/>
+							</group>
+							<notebook>
+								<page string="Data Siswa">
+									<group>
+										<field name="student_state"/>
+									</group>
+								</page>
+							</notebook>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="state_menu" name="Status" parent="student_cfg_menu" action="state_act" sequence="40"/>
+
+		<!-- State Transfer View -->
+			<record id="state_transfer_act" model="ir.actions.act_window">
+				<field name="name">Perpindahan Status Siswa</field>
+				<field name="res_model">as.state_transfer</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="state_transfer_tree" model="ir.ui.view">
+				<field name="name">state_transfer_tree_view</field>
+				<field name="model">as.state_transfer</field>
+				<field name="arch" type="xml">
+					<tree default_order="id desc">
+						<field name="name"/>
+						<field name="validate_uid"/>
+						<field name="state"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="state_transfer_form" model="ir.ui.view">
+				<field name="name">state_transfer_form_view</field>
+				<field name="model">as.state_transfer</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<button string="Confirm" class="oe_highlight" type="object" name="action_confirm" attrs="{'invisible': [('state', '!=', 'Draft')]}"/>
+							<button string="Validate" class="oe_highlight" type="object" name="action_validate" attrs="{'invisible': [('state', '!=', 'Waiting')]}"/>
+							<button string="Cancel" type="object" name="action_cancel" attrs="{'invisible': [('state', '=', 'Cancelled')]}" confirm="Apa Anda yakin ingin mengembalikan status siswa seperti semula?"/>
+							<button string="Set to Draft" type="object" name="action_draft" attrs="{'invisible': [('state', '!=', 'Cancelled')]}"/>
+							<field name="state" widget="statusbar"/>
+						</header>
+						<sheet>
+							<div class="oe_title">
+								<h1>
+									<field name="name" readonly="1"/>
+								</h1>
+							</div>
+							<group>
+								<group attrs="{'invisible': [('state', '!=', 'Validated')]}">
+									<field name="validate_uid"/>
+									<field name="validate_date"/>
+								</group>
+								<separator attrs="{'invisible': [('state', '!=', 'Validated')]}"/>
+								<field name="item_ids" attrs="{'readonly': [('state', '!=', 'Draft')]}"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="state_transfer_menu" name="Pengubahan Status" parent="transfer_menu" action="state_transfer_act"/>
+
+		<!-- Student Transfer Item View -->
+			<record id="state_transfer_item_tree" model="ir.ui.view">
+				<field name="name">state_transfer_item_tree_view</field>
+				<field name="model">as.state_transfer_item</field>
+				<field name="arch" type="xml">
+					<tree editable="top">
+						<field name="student_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+						<field name="current_class"/>
+						<field name="current_state"/>
+						<field name="next_state" options="{'no_create': 1, 'no_create_edit': 1}"/>
+					</tree>
+				</field>
+			</record>
+
+	</data>
+</odoo>
