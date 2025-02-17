@@ -1,0 +1,191 @@
+<odoo>
+	<data>
+		<report
+			string="Invoice Slip"
+			id="student_invoice"
+			model="as.due.payment"
+			report_type="qweb-pdf"
+			name="asm_student_payment.student_invoice_slip"
+			file="asm_student_payment.student_invoice_slip"
+			print_report_name="'Invoice - %s - %s' % (object.name, object.student_id.full_name)"
+		/>
+
+		<template id="student_invoice_slip">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="web.basic_layout">
+						<div class='header'>
+							<div class="row">
+								<div class="col-2">
+									<img src="/asm_student/static/src/img/Logo.png" class="img-fluid"/>
+								</div>
+								<div class="col-10">
+									<h4 class="text-center">YAYASAN ANUGERAH DHARMA SEJAHTERA</h4>
+									<h2 class="text-center">KB-TK-SD-SMP ANUGERAH SCHOOL</h2>
+									<p class="text-center">Kawasan Sentra Niaga Blok RE. 29, Citra Garden, Sidoarjo, Indonesia<br/>Telp: 807-3097 | Fax: 807-3098 | Email: info@anugerahschool.sch.id</p>
+								</div>
+							</div>
+							<div class="row my-3">
+								<div class="col-12" style="border-bottom: 2px solid black">
+								</div>
+							</div>
+						</div>
+						<div class="page">
+							<div class="row mt-5 mb-3">
+								<div class="col-8">
+									<h3 t-field="o.name"/>
+								</div>
+								<div class="col-4">
+									<h3 class="text-end">BUKTI BAYAR</h3>
+								</div>
+							</div>
+							<div class="row my-3">
+								<div class="col-8">
+									<h4>
+										Total Tagihan: 
+										<span t-field="o.currency_id.symbol"/>
+										<span t-field="o.amount_total"/>
+									</h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-3">Pembayaran</div>
+								<div class="col-9">: <t t-esc="o.reference"/></div>
+							</div>
+							<div class="row">
+								<div class="col-3">Batas Pelunasan</div>
+								<div class="col-9">: <t t-esc="o.due_date.strftime('%d %B %Y')"/></div>
+							</div>
+							<div class="row">
+								<div class="col-3">Keterangan</div>
+								<div class="col-9">: <t t-esc="o.note"/></div>
+							</div>
+							<div class="row">
+								<div class="col-3">Status</div>
+								<div class="col-9">: <t t-esc="o.status"/></div>
+							</div>
+							<div class="row">
+								<div class="col-3">Siswa</div>
+								<div class="col-9">: <span t-field="o.student_id"/></div>
+							</div>
+							<t t-set="paid" t-value="0"/>
+							<t t-set="comp" t-value="0"/>
+							<table class="table table-striped my-3">
+								<tbody>
+									<tr>
+										<td colspan="5"><h5>Sejarah Pembayaran</h5></td>
+									</tr>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Kode Bayar</th>
+										<th scope="col">Tanggal</th>
+										<th scope="col">Keterangan</th>
+										<th style="width: 25%" class="text-right" scope="col">Nominal</th>
+									</tr>
+									<t t-set="number" t-value="1"/>
+									<t t-if="len(o.payment_ids) > 0">
+										<tr t-foreach="o.payment_ids" t-as="line">
+											<th scope="row"><t t-esc="number"/></th>
+											<td><t t-esc="line.name"/></td>
+											<td><t t-esc="line.approved_date.strftime('%d %B %Y')"/></td>
+											<td><span t-field="line.note"/></td>
+											<td style="width: 25%" class="text-right">
+												<span t-field="o.currency_id.symbol"/>
+												<span t-field="line.value" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+											</td>
+											<t t-set="paid" t-value="paid + line.value"/>
+											<t t-set="number" t-value="number+1"/>
+										</tr>
+									</t>
+									<t t-else="">
+										<tr>
+											<td colspan="5"><i>Belum ada pembayaran yang dilakukan</i></td>
+										</tr>
+									</t>
+
+									<tr>
+										<td colspan="5"><h5>Dafter Kompensasi</h5></td>
+									</tr>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Kode Kompensasi</th>
+										<th scope="col">Tanggal</th>
+										<th scope="col">Keterangan</th>
+										<th style="width: 25%" class="text-right" scope="col">Nominal</th>
+									</tr>
+									<t t-set="number" t-value="1"/>
+									<t t-if="len([line for line in o.compensation_ids if line.state=='active']) > 0">
+										<tr t-foreach="o.compensation_ids" t-as="line">
+											<t t-if="line.state == 'active'">
+												<th scope="row"><t t-esc="number"/></th>
+												<td><t t-esc="line.name"/></td>
+												<td><t t-esc="line.validated_on.strftime('%d %B %Y')"/></td>
+												<td><span t-field="line.description"/></td>
+												<td style="width: 25%" class="text-right">
+													<span t-field="o.currency_id.symbol"/>
+													<span t-field="line.amount" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+												</td>
+												<t t-set="number" t-value="number+1"/>
+												<t t-set="comp" t-value="comp + line.amount"/>
+											</t>
+										</tr>
+									</t>
+									<t t-else="">
+										<tr>
+											<td colspan="5"><i>Tidak ada kompensasi yang diberikan</i></td>
+										</tr>
+									</t>
+								</tbody>
+								<tfooter>
+									<tr>
+										<th colspan="4" class="text-right">Total Bayar</th>
+										<th class="text-right">
+											<span t-field="o.currency_id.symbol"/>
+											<span t-esc="paid"/>
+										</th>
+									</tr>
+									<tr>
+										<th colspan="4" class="text-right">Total Kompensasi</th>
+										<th class="text-right">
+											<span t-field="o.currency_id.symbol"/>
+											<span t-esc="comp"/>
+										</th>
+									</tr>
+									<tr>
+										<th colspan="4" class="text-right">Sisa Tagihan</th>
+										<th class="text-right">
+											<span t-field="o.currency_id.symbol"/>
+											<span t-field="o.unpaid"/>
+										</th>
+									</tr>
+								</tfooter>
+							</table>
+							<div class="row" style="margin-top: 2em">
+								<div class="col-3">
+									<div>Sidoarjo, <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d %B %Y')"/></div>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 3cm;">
+								<div class="col-3">
+									<div style="border-bottom: 2px solid grey">
+
+									</div>
+									<div>User: <b><t t-esc="user.partner_id.name"/></b></div>
+								</div>
+								<div class="col-6">
+
+								</div>
+								<div class="col-3">
+									<div style="border-bottom: 2px solid grey">
+
+									</div>
+									<div><b><span t-field="o.student_id"/></b></div>
+								</div>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

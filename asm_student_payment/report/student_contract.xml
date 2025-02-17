@@ -1,0 +1,106 @@
+<odoo>
+	<data>
+		<report
+			string="Kontrak Tagihan"
+			id="student_contract"
+			model="asm.student"
+			report_type="qweb-pdf"
+			name="asm_student_payment.student_contract_pdf"
+			file="asm_student_payment.student_contract_pdf"
+			print_report_name="'Contract - %s' % (object.full_name)"
+		/>
+
+		<template id="student_contract_pdf">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="web.basic_layout">
+						<div class='header'>
+							<div class="row">
+								<div class="col-2">
+									<img src="/asm_student/static/src/img/Logo.png" class="img-fluid"/>
+								</div>
+								<div class="col-10">
+									<h4 class="text-center">YAYASAN ANUGERAH DHARMA SEJAHTERA</h4>
+									<h2 class="text-center">KB-TK-SD-SMP ANUGERAH SCHOOL</h2>
+									<p class="text-center">Kawasan Sentra Niaga Blok RE. 29, Citra Garden, Sidoarjo, Indonesia<br/>Telp: 807-3097 | Fax: 807-3098 | Email: info@anugerahschool.sch.id</p>
+								</div>
+							</div>
+							<div class="row my-3">
+								<div class="col-12" style="border-bottom: 2px solid black">
+								</div>
+							</div>
+						</div>
+						<div t-if="len(o.invoice_rules) == 0" class="page">
+							Tidak ada biaya yang dapat dicetak.<br/>
+							<ol>Lakukan langkah-langkah di bawah ini untuk mencetak kontrak biaya siswa:
+								<li>Di data siswa, pilih Template Pembayaran jika belum terpilih</li>
+								<li>Klik tombol Create Rule</li>
+								<li>Di tabel Pengaturan Tagihan, pastikan semua biaya sesuai</li>
+								<li>Klik tombol Lock</li>
+								<li>Klik tombol Cetak Kontrak lagi</li>
+							</ol>
+						</div>
+						<div t-else="" class="page">
+							<div class="row my-5">
+								<div class="col-8">
+									<h3 t-esc="o.full_name"/>
+								</div>
+								<div class="col-4">
+									<h3 class="text-end">KONTRAK PEMBAYARAN</h3>
+								</div>
+							</div>
+							<p><b>Detil Biaya</b></p>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Item Bayar</th>
+										<th style="width: 25%" class="text-right" scope="col">Biaya</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t t-set="number" t-value="1"/>
+									<tr t-foreach="o.invoice_rules" t-as="payment">
+										<th scope="row"><t t-esc="number"/></th>
+										<td><t t-esc="payment.payment_category_id.name"/></td>
+										<td style="width: 25%" class="text-right">
+											<span t-field="payment.currency_id.symbol"/>
+											<span t-field="payment.amount_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;payment.currency_id&quot;}"/>
+										</td>
+										<t t-set="number" t-value="number+1"/>
+									</tr>
+								</tbody>
+							</table>
+							<hr/>
+							<p>
+								Dengan menandatangani dokumen ini, anda selaku orang tua dari <b><t t-esc="o.full_name"/></b> berjanji akan membayar pihak Anugerah School dengan ketentuan yang sudah dijelaskan oleh pihak Anugerah School.
+							</p>
+							<div class="row" style="margin-top: 2em">
+								<div class="col-3">
+									<div>Sidoarjo, <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d %B %Y')"/></div>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 3cm;">
+								<div class="col-3">
+									<div style="border-bottom: 2px solid grey">
+
+									</div>
+									<div>User: <b><t t-esc="user.partner_id.name"/></b></div>
+								</div>
+								<div class="col-6">
+
+								</div>
+								<div class="col-3">
+									<div style="border-bottom: 2px solid grey">
+
+									</div>
+									<div><b><span t-field="o.full_name"/></b></div>
+								</div>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

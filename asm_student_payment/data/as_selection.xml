@@ -1,0 +1,167 @@
+<odoo>
+	<data>
+		<!-- DO NOT, in any way, DO NOT DELETE THIS RECORD FROM ODOO -->
+		<record id="autodebit_selection" model="as.selection">
+			<field name="name">Autodebit</field>
+			<field name="value">Autodebit</field>
+			<field name="is_payment_channel">True</field>
+			<field name="payment_extra_fee">0</field>
+		</record> 
+
+		<record id="payment_pembelian_kemeja_identitas_selection" model="as.selection">
+			<field name="name">Pembelian Kemeja Identitas</field>
+			<field name="value">Pembelian Kemeja Identitas</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_celana_identitas_selection" model="as.selection">
+			<field name="name">Pembelian Celana Identitas</field>
+			<field name="value">Pembelian Celana Identitas</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_rokdress_identitas_selection" model="as.selection">
+			<field name="name">Pembelian Rokdress Identitas</field>
+			<field name="value">Pembelian Rokdress Identitas</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_rok_celana_identitas_selection" model="as.selection">
+			<field name="name">Pembelian Rok Celana Identitas</field>
+			<field name="value">Pembelian Rok Celana Identitas</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_kemeja_putih_nasional__selection" model="as.selection">
+			<field name="name">Pembelian Kemeja Putih Nasional </field>
+			<field name="value">Pembelian Kemeja Putih Nasional </field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_celana_merah_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Celana Merah Nasional</field>
+			<field name="value">Pembelian Celana Merah Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_kemeja_pramuka__selection" model="as.selection">
+			<field name="name">Pembelian Kemeja Pramuka </field>
+			<field name="value">Pembelian Kemeja Pramuka </field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_celana_pramuka__selection" model="as.selection">
+			<field name="name">Pembelian Celana Pramuka </field>
+			<field name="value">Pembelian Celana Pramuka </field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_rok_celana_pramuka_selection" model="as.selection">
+			<field name="name">Pembelian Rok Celana Pramuka</field>
+			<field name="value">Pembelian Rok Celana Pramuka</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_rok_celana_merah_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Rok Celana Merah Nasional</field>
+			<field name="value">Pembelian Rok Celana Merah Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_celana_biru_nasional__selection" model="as.selection">
+			<field name="name">Pembelian Celana Biru Nasional </field>
+			<field name="value">Pembelian Celana Biru Nasional </field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_rok_celana_biru_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Rok Celana Biru Nasional</field>
+			<field name="value">Pembelian Rok Celana Biru Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_seragam_olah_raga__selection" model="as.selection">
+			<field name="name">Pembelian Seragam Olah raga </field>
+			<field name="value">Pembelian Seragam Olah raga </field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_kaos_kaki_putih_selection" model="as.selection">
+			<field name="name">Pembelian Kaos Kaki Putih</field>
+			<field name="value">Pembelian Kaos Kaki Putih</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_kaos_kaki_hitam__selection" model="as.selection">
+			<field name="name">Pembelian Kaos kaki Hitam </field>
+			<field name="value">Pembelian Kaos kaki Hitam </field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_topi_kotak_selection" model="as.selection">
+			<field name="name">Pembelian Topi Kotak</field>
+			<field name="value">Pembelian Topi Kotak</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_dasi_kotak_selection" model="as.selection">
+			<field name="name">Pembelian Dasi Kotak</field>
+			<field name="value">Pembelian Dasi Kotak</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_dasi_merah_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Dasi Merah Nasional</field>
+			<field name="value">Pembelian Dasi Merah Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_topi_merah_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Topi Merah Nasional</field>
+			<field name="value">Pembelian Topi Merah Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_dasi_biru_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Dasi Biru Nasional</field>
+			<field name="value">Pembelian Dasi Biru Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembelian_topi_biru_nasional_selection" model="as.selection">
+			<field name="name">Pembelian Topi Biru Nasional</field>
+			<field name="value">Pembelian Topi Biru Nasional</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembayaran_fieldtrip_selection" model="as.selection">
+			<field name="name">Fieldtrip</field>
+			<field name="value">Fieldtrip</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembayaran_graduation_selection" model="as.selection">
+			<field name="name">Graduation</field>
+			<field name="value">Graduation</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembayaran_rekreasi_selection" model="as.selection">
+			<field name="name">Rekreasi</field>
+			<field name="value">Rekreasi</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembayaran_kawai_selection" model="as.selection">
+			<field name="name">Kawai</field>
+			<field name="value">Kawai</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+
+		<record id="payment_pembayaran_lain_lain_selection" model="as.selection">
+			<field name="name">Lain-lain</field>
+			<field name="value">Lain-lain</field>
+			<field name="is_custom_transaction">True</field>
+		</record>
+	</data>
+</odoo>

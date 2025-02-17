@@ -1,0 +1,563 @@
+<odoo>
+	<data>
+		<menuitem id="accounting_report_menu" parent="asm_accounting.root_menu" name="Laporan" sequence="299"/>
+
+		<!-- Manual Trigger Invoice -->
+			<record id="manual_trigger_invoice" model="ir.actions.server">
+				<field name="name">Buat Tagihan SPP</field>
+				<field name="model_id" ref="asm_student_payment.model_as_due_payment"/>
+				<field name="state">code</field>
+				<field name="code">
+model.manual_daily_run()
+				</field>
+			</record>
+
+			<menuitem id="manual_trigger_invoice_menu" parent="asm_accounting.accounting_cfg_menu" name="Buat Tagihan SPP" sequence="300" action="manual_trigger_invoice" groups="base.group_system"/>
+
+		<!-- Invoice Comp View -->
+			<record id="invoice_comp_act_window" model="ir.actions.act_window">
+				<field name="name">Kompensasi Tagihan</field>
+				<field name="res_model">as.invoice.comp</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="invoice_comp_tree_view" model="ir.ui.view">
+				<field name="name">invoice_comp_tree_view</field>
+				<field name="model">as.invoice.comp</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="name"/>
+						<field name="description"/>
+						<field name="currency_id" invisible="1"/>
+						<field name="student_id"/>
+						<field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<field name="validated_by"/>
+						<field name="validated_on"/>
+						<field name="state"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="invoice_comp_form_view" model="ir.ui.view">
+				<field name="name">invoice_comp_form_view</field>
+				<field name="model">as.invoice.comp</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<button string="Aktifkan Kompensasi" type="object" name="validate_comp" class="oe_highlight" states="inactive" groups="asm_student_payment.manager_group,asm_accounting.manager_group"/>
+							<field name="state" widget="statusbar"/>
+						</header>
+						<sheet>
+							<label for="name"/>
+							<div class="oe_title">
+								<h1><field name="name"/></h1>
+							</div>
+							<group>
+								<group>
+									<field name="invoice_id" options="{'no_create': 1, 'no_create_edit': 1}" attrs="{'readonly': [('state', '=', 'active')]}"/>
+									<field name="currency_id" invisible="1"/>
+									<field name="student_id"/>
+									<field name="description" attrs="{'readonly': [('state', '=', 'active')]}"/>
+									<field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', '=', 'active')]}"/>
+								</group>
+								<group attrs="{'invisible': [('state', '=', 'inactive')]}">
+									<field name="validated_by"/>
+									<field name="validated_on"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="invoice_comp_menu" name="Kompensasi Tagihan" parent="asm_student_payment.accounting_report_menu" action="invoice_comp_act_window" groups="asm_student_payment.manager_group,asm_accounting.manager_group"/>
+
+		<!-- Financial Report View -->
+			<record id="financial_category_act_window" model="ir.actions.act_window">
+				<field name="name">Kategori Laporan Estimasi</field>
+				<field name="res_model">as.financial.report.category</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="financial_category_tree_view" model="ir.ui.view">
+				<field name="name">financial_category_tree_view</field>
+				<field name="model">as.financial.report.category</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="name"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="financial_category_form_view" model="ir.ui.view">
+				<field name="name">financial_category_form_view</field>
+				<field name="model">as.financial.report.category</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<group>
+								<field name="name"/>
+								<field name="invoice_domain" widget="domain" options="{'model': 'as.due.payment', 'in_dialog': True}"/>	
+								<field name="payment_domain" widget="domain" options="{'model': 'as.payment', 'in_dialog': True}"/>	
+								<field name="include_past_receivable"/>
+								<field name="only_past_receivable" attrs="{'invisible': [('include_past_receivable', '=', False)]}"/>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="financial_category_report_menu" name="Item Laporan Estimasi" parent="asm_accounting.accounting_cfg_menu" action="financial_category_act_window" groups="asm_student_payment.manager_group,asm_accounting.manager_group"/>
+
+		<!-- Financial Report View -->
+			<record id="financial_report_act_window" model="ir.actions.act_window">
+				<field name="name">Laporan Estimasi</field>
+				<field name="res_model">asm.financial.report</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="financial_report_tree_view" model="ir.ui.view">
+				<field name="name">financial_report_tree_view</field>
+				<field name="model">asm.financial.report</field>
+				<field name="arch" type="xml">
+					<tree default_order="create_date desc" create="false">
+						<field name="name"/>
+						<field name="item_ids"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="financial_report_form_view" model="ir.ui.view">
+				<field name="name">refund_report_form_view</field>
+				<field name="model">asm.financial.report</field>
+				<field name="arch" type="xml">
+					<form copy="false" create="false" edit="false">
+						<header>
+							<button string="Refresh Potensi" type="object" name="refresh_total_amount" icon="fa-refresh" confirm="Anda akan menghitung ulang angka potensi. Anda ingin melanjutkan?" groups="asm_student_payment.manager_group"/>
+							<button string="Refresh Realisasi" type="object" name="refresh_paid_amount" icon="fa-refresh" confirm="Anda akan menghitung ulang angka realisasi. Anda ingin melanjutkan?" groups="asm_student_payment.manager_group"/>
+						</header>
+						<sheet>
+							<label for="name"/>
+							<div class="oe_title">
+								<h1><field name="name"/></h1>
+							</div>
+							<group string="Tabel Laporan">
+								<field name="item_ids" nolabel="1" colspan="2">
+									<tree default_order="category_id asc">
+										<field name="category_id"/>
+										<field name="total" string="Potensi" sum="Total"/>
+										<field name="paid" string="Realisasi" sum="Total"/>
+									</tree>
+								</field>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="financial_report_menu" name="Laporan Estimasi" parent="asm_student_payment.accounting_report_menu" action="financial_report_act_window" groups="asm_student_payment.manager_group,asm_accounting.manager_group"/>
+
+		<!-- Refund View -->
+			<record id="refund_act_window" model="ir.actions.act_window">
+				<field name="name">Pembayaran Refund</field>
+				<field name="res_model">as.refund.payment</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+
+			<record id="refund_report_tree_view" model="ir.ui.view">
+				<field name="name">refund_report_tree_view</field>
+				<field name="model">as.refund.payment</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="currency_id" invisible="1"/>
+						<field name="name"/>
+						<field name="note"/>
+						<field name="approved_date"/>
+						<field name="account_id"/>
+						<field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<field name="user_id"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="refund_report_form_view" model="ir.ui.view">
+				<field name="name">refund_report_form_view</field>
+				<field name="model">as.refund.payment</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<field name="currency_id" invisible="1"/>
+							<button string="Post" type="object" name="post_refund" class="oe_highlight" attrs="{'invisible': [('journal_id', '!=', False)]}"/>
+							<button string="Unpost" type="object" name="unpost_refund" attrs="{'invisible': [('journal_id', '=', False)]}"/>
+						</header>
+						<sheet>
+							<label for="name"/>
+							<div class="oe_title">
+								<h1><field name="name"/></h1>
+							</div>
+							<group>
+								<group string="Informasi Refund">
+									<field name="student_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="invoice_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="account_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="payment_method"/>
+									<field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="note"/>
+								</group>
+								<group string="Persetujuan" attrs="{'invisible': [('journal_id', '=', False)]}">
+									<field name="journal_id"/>
+									<field name="user_id"/>
+									<field name="approved_date"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+		<!-- Payment View -->
+			<record id="payment_report_tree_view" model="ir.ui.view">
+				<field name="name">payment_report_tree_view</field>
+				<field name="model">as.payment</field>
+				<field name="arch" type="xml">
+					<tree create="false" edit="false" delete="false" default_order="create_date desc" decoration-muted="active==False">
+						<field name="create_date" invisible="1"/>
+						<field name="currency_id" invisible="1"/>
+						<field name="active" invisible="1"/>
+						<field name="approved_date"/>
+						<field name="approved_by"/>
+						<field name="name"/>
+						<field name="student_id"/>
+						<field name="payment_id"/>
+						<field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+						<field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+						<field name="state"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="payment_form_view" model="ir.ui.view">
+				<field name="name">payment_form_view</field>
+				<field name="model">as.payment</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<button class="oe_highlight" string="Post" type="object" name="action_post" attrs="{'invisible': [('state', '=', 'Posted')]}"/>
+							<button string="Pindah Tagihan" type="object" name="move_payment_wiz" icon="fa-arrows" groups="asm_student_payment.manager_group"/>
+							<button string="Cancel" type="object" name="action_cancel" attrs="{'invisible': [('state', '=', 'Draft')]}" groups="asm_student_payment.manager_group"/>
+							<button string="Active/Archive" icon="fa-exchange" type="object" name="toggle_active" groups="asm_student_payment.manager_group"/>
+							<field name="state" widget="statusbar"/>
+						</header>
+						<sheet>
+							<field name="active" invisible="1"/>
+							<div colspan="2" class="alert alert-warning shadow-sm" attrs="{'invisible': [('active', '=', True)]}">
+								<i>Pembayaran ini telah di-archive.</i>
+							</div>
+							<div class="oe_title">
+								<h1>
+									<field name="name" readonly="1"/>
+								</h1>
+							</div>
+							<group>
+								<group>
+									<field name="student_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="account_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="payment_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="currency_id" invisible="1"/>
+									<field name="amount_to_pay" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="payment_method" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="payment_note"/>
+									<field name="note"/>
+								</group>
+								<group>
+									<field name="approved_by" attrs="{'invisible': [('state', '=', 'Draft')]}"/>
+									<field name="approved_date" attrs="{'invisible': [('state', '=', 'Draft')]}"/>
+									<field name="journal_id" readonly="1" attrs="{'invisible': [('state', '=', 'Draft')]}"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+			<record id="payment_report_search_view" model="ir.ui.view">
+				<field name="name">payment_report_search_view</field>
+				<field name="model">as.payment</field>
+				<field name="arch" type="xml">
+					<search>
+						<field name="student_id"/>
+						<field name="payment_id"/>
+						<field name="name"/>
+	                    <filter string="Today" name="today_payment" domain="[('create_date', 'ilike', '%' + datetime.date.today().strftime('%Y-%m-%d') + '%')]"/>
+						<filter string="Archived" name="archived_journal" domain="[('active', '=', False)]" groups="asm_student_payment.manager_group"/>
+					</search>
+				</field>
+			</record>
+
+			<record id="payment_act_window" model="ir.actions.act_window">
+				<field name="name">Pembayaran</field>
+				<field name="res_model">as.payment</field>
+				<field name="view_mode">tree</field>
+				<field name="view_id" ref="payment_report_tree_view"/>
+				<field name="search_view_id" ref="payment_report_search_view"/>
+				<field name="context">{'search_default_today_payment': 1}</field>
+			</record>
+
+			<menuitem id="payment_menu" name="Pembayaran" parent="accounting_report_menu" action="payment_act_window"/>
+
+			<record id="payment_modal_act" model="ir.actions.act_window">
+				<field name="name">Pembayaran</field>
+				<field name="res_model">as.payment</field>
+				<field name="view_mode">form</field>
+				<field name="target">new</field>
+				<field name="context">{'student_id': active_id}</field>
+			</record>
+
+		<!-- Payment Category View -->			
+			<record id="payment_category_form_view" model="ir.ui.view">
+				<field name="name">payment_category_form_view</field>
+				<field name="model">asm.payment.category</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<label for="name"/>
+							<div class="oe_title">
+								<h1>
+									<field name="name"/>
+								</h1>
+							</div>
+							<group>
+								<group>
+									<field name="category_type"/>
+									<field name="balance_payment"/>
+									<field name="invoiced_date" attrs="{'invisible': [('category_type', '=', '1x Bayar')]}"/>
+									<p colspan="2" attrs="{'invisible': [('invoiced_date', '&lt;=', 27)]}">Invoice tidak akan terbuat secara konsisten karena Februari memiliki jumlah hari yang berbeda.</p>
+									<label for="due"/>
+									<div>
+										<field name="due" style="max-width: 20%"/>
+										<span style="display:inline-block;max-width: 80%; margin-left: 4px">hari</span>
+									</div>
+									<field name="value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="currency_id" groups="base.group_no_one"/>
+								</group>
+							</group>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+		<!-- Payment Template View -->			
+			<record id="payment_template_act" model="ir.actions.act_window">
+				<field name="name">Template Pembayaran</field>
+				<field name="res_model">as.payment.template</field>
+				<field name="view_mode">tree,form</field>
+			</record>
+			
+			<record id="payment_template_tree_view" model="ir.ui.view">
+				<field name="name">payment_template_tree_view</field>
+				<field name="model">as.payment.template</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="name"/>
+						<field name="term_id"/>
+						<field name="stage_id"/>
+						<!-- <field name="account_id"/> -->
+					</tree>
+				</field>
+			</record>
+
+			<record id="payment_template_form_view" model="ir.ui.view">
+				<field name="name">payment_template_form_view</field>
+				<field name="model">as.payment.template</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<div class="oe_title">
+								<h1>
+									<field name="name" placeholder="Nama template pembayaran"/>
+								</h1>
+							</div>
+							<!-- <group>
+								<field name="account_id"/>
+							</group> -->
+							<group>
+								<group>
+									<field name="term_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="stage_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+								</group>
+							</group>
+							<label for="category_ids" class="oe_edit_only"/>
+							<field name="category_ids" nolabel="1">
+								<tree>
+									<field name="name"/>
+									<field name="value"/>
+									<field name="currency_id"/>
+								</tree>
+							</field>
+						</sheet>
+						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+						</div>
+					</form>
+				</field>
+			</record>
+
+			<menuitem id="payment_template_menu" name="Template Pembayaran" parent="asm_student.student_cfg_menu" action="payment_template_act"/>
+
+		<!-- Due Payment View -->
+			<record id="due_payment_act" model="ir.actions.act_window">
+				<field name="name">Tagihan Siswa</field>
+				<field name="res_model">as.due.payment</field>
+				<field name="view_mode">tree,form</field>
+				<field name="context">{'search_default_active_invoice': 1, 'group_by': 'student_id'}</field>
+			</record>
+
+			<record id="due_payment_kanban_view" model="ir.ui.view">
+				<field name="name">due_payment_kanban_view</field>
+				<field name="model">as.due.payment</field>
+				<field name="arch" type="xml">
+					<kanban>
+						<field name="name"/>
+						<field name="student_id"/>
+						<field name="unpaid"/>
+						<field name="currency_id"/>
+						<field name="due_date"/>
+						<templates>
+							<t t-name="kanban-box">
+								<div class="oe_kanban_global_click">
+									<div class="oe_kanban_details">
+										<strong class="o_kanban_record_title">
+											<h3>
+												<field name="student_id"/>
+											</h3>
+										</strong>
+										<div>
+											<field name="name"/>
+										</div>
+										<div>
+											Batas bayar <field name="due_date"/>
+										</div>
+										<div style="text-align: right">
+											<field name="currency_id" invisible="1"/>
+											<field name="unpaid" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+										</div>
+									</div>
+								</div>
+							</t>
+						</templates>
+					</kanban>
+				</field>
+			</record>
+
+			<record id="due_payment_tree_view" model="ir.ui.view">
+				<field name="name">due_payment_tree_view</field>
+				<field name="model">as.due.payment</field>
+				<field name="arch" type="xml">
+					<tree default_order="due_date desc">
+						<field name="student_id"/>
+						<field name="current_class"/>
+						<field name="name"/>
+						<field name="reference"/>
+						<field name="due_date"/>
+						<field name="currency_id" invisible="1"/>
+						<field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+						<field name="unpaid" string="Sisa Bayar" sum="Total"/>
+						<field name="status"/>
+					</tree>
+				</field>
+			</record>
+
+			<record id="due_payment_form_view" model="ir.ui.view">
+				<field name="name">due_payment_form_view</field>
+				<field name="model">as.due.payment</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>							
+							<button class="oe_highlight" icon="fa-print" string="Invoice" type="object" name="print_report" attrs="{'invisible': [('paid', '=', 0)]}"/>
+							<button string="Tambah Kompensasi" icon="fa-percent" type="object" name="action_create_comp" groups="asm_student_payment.manager_group,asm_accounting.manager_group"/> 
+							<button string="Active/Archive" icon="fa-exchange" type="object" name="toggle_active" groups="asm_student_payment.manager_group"/>
+						</header>
+						<sheet>
+							<field name="active" invisible="1"/>
+							<div colspan="2" class="alert alert-warning shadow-sm" attrs="{'invisible': [('active', '=', True)]}">
+								<i>Tagihan ini telah di-archive.</i>
+							</div>
+							<div class="oe_title">
+								<h1>
+									<field name="name" readonly="1"/>
+								</h1>
+							</div>
+							<group>
+								<group>
+									<field name="reference" readonly="1"/>
+									<field name="student_id" readonly="1"/>
+									<field name="due_date" readonly="1"/>
+									<field name="note" readonly="1"/>
+								</group>
+								<group>
+									<field name="currency_id" invisible="1"/>
+									<field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+									<field name="paid" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+									<field name="unpaid" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+								</group>
+							</group>
+							<group string="Sejarah Pembayaran">
+								<field name="payment_ids" nolabel="1" colspan="2">
+									<tree create="false" edit="false" delete="false" default_order="create_date desc">
+										<field name="create_date" invisible="1"/>
+										<field name="currency_id" invisible="1"/>
+										<field name="approved_date"/>
+										<field name="approved_by"/>
+										<field name="name"/>
+										<field name="student_id"/>
+										<field name="payment_id"/>
+										<field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+										<field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+										<field name="state"/>
+									</tree>
+								</field>
+							</group>
+							<group string="Daftar Kompensasi" attrs="{'invisible': [('compensation_ids', '=', [])]}">
+								<field name="compensation_ids" nolabel="1" colspan="2"/>
+							</group>
+							<group string="Sejarah Refund" attrs="{'invisible': [('refund_ids', '=', [])]}">
+								<field name="refund_ids" nolabel="1" colspan="2" readonly="1"/>
+							</group>
+						</sheet>
+						<div class="oe_chatter">
+							<field name="activity_ids" widget="mail_activity"/>
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+						</div>
+					</form>
+				</field>
+			</record>
+
+			<record id="due_payment_search" model="ir.ui.view">
+				<field name="name">due_payment_search_view</field>
+				<field name="model">as.due.payment</field>
+				<field name="arch" type="xml">
+					<search>
+						<field name="student_id"/>
+						<field name="name"/>
+						<field name="reference"/>
+						<field name="amount_total"/>
+						<field name="unpaid"/>
+						<filter string="Belum Lunas" name="active_invoice" domain="[('status', '=', 'Belum Lunas')]"/>
+						<filter string="Lunas" name="inactive_invoice" domain="[('status', '=', 'Lunas')]"/>
+						<separator/>
+						<filter string="SPP" name="spp_invoice" domain="[('reference', 'ilike', 'SPP')]"/>
+						<filter string="Non-SPP" name="non_spp_invoice" domain="['!', ('reference', 'ilike', 'SPP')]"/>
+						<separator/>
+						<filter string="Tunggakan" name="overdue_invoice" domain="[('status', '=', 'Belum Lunas'), ('due_date', '&lt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+						<filter string="Archived" name="archived_journal" domain="[('active', '=', False)]" groups="asm_student_payment.manager_group"/>
+					</search>
+				</field>
+			</record>
+
+			<menuitem id="due_payment_menu" name="Tagihan" parent="asm_student_payment.accounting_report_menu" action="due_payment_act"/>
+	</data>
+</odoo>

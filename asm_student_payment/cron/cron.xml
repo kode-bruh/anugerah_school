@@ -1,0 +1,29 @@
+<odoo>
+	<data noupdate="1">
+		<record id="default_student_payment_cron" model="ir.cron">
+			<field name="name">Daily Routine: Generate Repetitive Invoice</field>
+			<field name="active" eval="True"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="doall">1</field>
+			<field name="nextcall" eval="datetime.today().strftime('%Y-%m-%d 18:00:00')"/>
+			<field name="model_id" ref="model_as_due_payment"/>
+			<field name="code">model.daily_run()</field>
+		</record>
+
+		<record id="update_financial_report" model="ir.cron">
+			<field name="name">Daily Routine: Update Financial Report</field>
+			<field name="active" eval="True"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="doall">1</field>
+			<field name="nextcall" eval="datetime.today().strftime('%Y-%m-%d 18:00:00')"/>
+			<field name="model_id" ref="model_asm_financial_report"/>
+			<field name="code">model.create_monthly_report()</field>
+		</record>
+	</data>
+</odoo>

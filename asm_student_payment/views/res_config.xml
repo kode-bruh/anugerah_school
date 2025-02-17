@@ -1,0 +1,29 @@
+<odoo>
+	<data>
+		<record id="res_config_settings_view_form" model="ir.ui.view">
+			<field name="name">res.config.settings.view.form.inherit.share</field>
+			<field name="model">res.config.settings</field>
+			<field name="priority" eval="10"/>
+			<field name="inherit_id" ref="asm_accounting.res_config_settings_view_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//div[@data-key='asm_accounting']" position="after">
+					<h2>Pengaturan Tahun Ajaran</h2>
+					<div class="row mt16 o_settings_container">
+						<div class="col-12 col-lg-6 o_setting_box" id="starting_month">
+							<div class="o_setting_left_pane">
+
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="new_term_month" string="Awal Tahun Ajaran"/>
+								<field name="new_term_month"/>
+								<div class="text-muted mb16">
+									Bulan yang menentukan awal tahun ajaran baru.
+								</div>
+							</div>
+						</div>
+					</div>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

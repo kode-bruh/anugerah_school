@@ -1,0 +1,71 @@
+<odoo>
+	<data>
+		<record id="create_invoice_wizard_form" model="ir.ui.view">
+			<field name="name">create_invoice_wizard_form</field>
+			<field name="model">as.create_invoice.wiz</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<label for="student_id"/>
+						<div class="oe_title">
+							<h1><field name="student_id"/></h1>
+						</div>
+						<group attrs="{'invisible': [('is_custom', '=', True)]}" string="Template Pembayaran Berikutnya">
+							<field name="use_next_payment_template" string="Pakai"/>
+							<field name="next_payment_template_id" groups="base.group_no_one" string="Template Tagihan"/>
+							<field name="next_payment_debug" string="Keterangan" attrs="{'invisible': [('next_payment_template_id', '!=', False)]}"/>
+						</group>
+						<field name="is_custom" invisible="1"/>
+						<group string="Tagihan yang Dibuat" attrs="{'invisible': [('is_custom', '=', False)]}" >
+							<field name="custom_invoice_ids" nolabel="1" colspan="2">
+								<tree editable="bottom">
+									<field name="wizard_id" invisible="1"/>
+									<field name="invoice_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="due_date"/>
+									<field name="balance_payment"/>
+									<field name="month"/>
+									<field name="year" attrs="{'required': [('month', '!=', False)]}"/>
+									<field name="amount_total"/>
+									<field name="note"/>
+								</tree>
+							</field>
+						</group>
+						<group string="Tagihan yang Dibuat" attrs="{'invisible': [('is_custom', '=', True)]}" >
+							<field name="alternate_invoice_ids" nolabel="1" colspan="2" attrs="{'invisible': [('use_next_payment_template', '=', False)]}">
+								<tree editable="bottom">
+									<field name="payment_template_id" invisible="1"/>
+									<field name="wizard_id" invisible="1"/>
+									<field name="student_id" invisible="1"/>
+									<field name="invoice_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="due_date"/>
+									<field name="balance_payment"/>
+									<field name="month"/>
+									<field name="year" attrs="{'required': [('month', '!=', False)]}"/>
+									<field name="discount_amount"/>
+									<field name="amount_total"/>
+									<field name="note"/>
+								</tree>
+							</field>
+							<field name="invoice_ids" nolabel="1" colspan="2" attrs="{'invisible': [('use_next_payment_template', '=', True)]}">
+								<tree editable="bottom">
+									<field name="wizard_id" invisible="1"/>
+									<field name="student_id" invisible="1"/>
+									<field name="invoice_id" options="{'no_create_edit': 1, 'no_create': 1}"/>
+									<field name="due_date"/>
+									<field name="balance_payment"/>
+									<field name="month"/>
+									<field name="year" attrs="{'required': [('month', '!=', False)]}"/>
+									<field name="amount_total" readonly="1"/>
+									<field name="note"/>
+								</tree>
+							</field>
+						</group>
+					</sheet>
+					<footer>
+						<button string="Konfirmasi Tagihan" type="object" name="action_confirm" class="oe_highlight"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

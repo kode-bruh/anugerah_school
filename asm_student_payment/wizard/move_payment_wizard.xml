@@ -1,0 +1,29 @@
+<odoo>
+	<data>
+		<record id="move_payment_wizard_form" model="ir.ui.view">
+			<field name="name">move_payment_wizard_form</field>
+			<field name="model">as.move_payment.wiz</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<group>
+								<field name="student_id" invisible="1"/>
+								<field name="invoice_from_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+								<label for="payment_id" string="Pembayaran"/>
+								<div class="o_row">
+									<span><field name="payment_id" options="{'no_create': 1, 'no_create_edit': 1, 'no_open': 1}"/></span>
+									<span>Dipindah ke <i class="fa fa-long-arrow-right"></i></span>
+									<span><field name="invoice_to_id" options="{'no_create': 1, 'no_create_edit': 1}"/></span>
+								</div>
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button string="Pindah Pembayaran" type="object" name="action_move" class="oe_highlight"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

@@ -1,0 +1,148 @@
+<odoo>
+	<data>
+		<!-- Class Stage View -->
+			<record id="class_stage_form" model="ir.ui.view">
+				<field name="name">class_stage_form_view</field>
+				<field name="model">asm.class.stage</field>
+				<field name="inherit_id" ref="asm_student.class_stage_form"/>
+				<field name="arch" type="xml">
+					<xpath expr="//div[hasclass('oe_title')]" position="after">
+						<group string="Template Pembayaran">
+							<field name="payment_template_ids" nolabel="1" colspan="2"/>
+						</group>
+					</xpath>
+				</field>
+			</record>
+
+		<!-- Selection View -->
+			<record id="student_payment_inherit_selection_tree" model="ir.ui.view">
+				<field name="name">student_payment_inherit_selection_tree</field>
+				<field name="model">as.selection</field>
+				<field name="inherit_id" ref="asm_accounting.accounting_inherit_selection_tree"/>
+				<field name="arch" type="xml">
+					<field name="is_payment_channel" position="after">
+						<field name="is_custom_transaction"/>
+					</field>
+					<tree position="attributes">
+						<attribute name="default_order">is_religion desc, is_address_type desc, is_transportation_type desc, is_education_level desc, is_work_field desc, is_income_rate desc, is_special_needs desc, is_class_stage desc, is_class_alt desc, is_payment_channel desc, is_custom_transaction desc</attribute>
+					</tree>
+				</field>
+			</record>
+
+			<record id="student_payment_inherit_selection_form" model="ir.ui.view">
+				<field name="name">student_payment_inherit_selection_form</field>
+				<field name="model">as.selection</field>
+				<field name="inherit_id" ref="asm_student.selection_form"/>
+				<field name="arch" type="xml">
+					<field name="is_class_alt" position="after">
+						<field name="is_custom_transaction"/>
+					</field>
+				</field>
+			</record>
+
+		<!-- Student View -->		
+			<record id="student_search" model="ir.ui.view">
+				<field name="name">student_search_view</field>
+				<field name="model">asm.student</field>
+				<field name="inherit_id" ref="asm_student.student_search"/>
+				<field name="arch" type="xml">
+					<filter name="inactive_student" position="after">
+						<separator/>
+						<filter string="Tagihan Khusus" name="custom_invoice_rule" domain="[('is_custom_invoice', '=', True)]"/>
+						<filter string="Anak Karyawan" name="employee_kid" domain="[('is_employee_kid', '=', True)]"/>
+						<filter string="Tagihan Tidak Sama" name="payment_rule_not_match" domain="[('payment_rule_match', '=', False)]"/>
+						<filter string="Tidak Tertagih" name="not_invoiced_any" domain="[('is_not_invoiced', '=', True)]"/>
+					</filter>
+				</field>
+			</record>	
+
+			<record id="student_payment_inherit_student" model="ir.ui.view">
+				<field name="name">student_payment_inherit_student</field>
+				<field name="model">asm.student</field>
+				<field name="inherit_id" ref="asm_student.student_form"/>
+				<field name="arch" type="xml">
+					<xpath expr="/form/sheet/notebook" position="inside">
+						<page string="Data Pembayaran" name="payment_info" groups="asm_student_payment.operator_group">
+							<group>
+								<field name="account_number"/>
+								<field name="payment_note"/>
+								<field name="balance" invisible="1"/>
+							</group>
+							<group>
+								<field name="is_custom_invoice"/>
+								<field name="is_employee_kid"/>
+								<!-- <field name="custom_payment_template" attrs="{'invisible': [('use_custom_payment_template', '=', False)], 'required': [('use_custom_payment_template', '=', True)]}" options="{'no_create': 1, 'no_create_edit': 1}"/> -->
+								<field name="payment_template" string="Template Tagihan"/>
+								<field name="payment_rule_match" invisible="1"/>
+								<div colspan="2" class="alert alert-danger shadow-sm" attrs="{'invisible': [('payment_rule_match', '=', True)]}">
+									<i>Aturan tagihan dan template tagihan tidak cocok. Harap melakukan <b><i class="fa fa-repeat"></i> Aturan Tagihan</b> jika Anda merasa aturan tagihan tersebut salah.</i>
+								</div>
+								<field name="invoice_rules" attrs="{'invisible': [('invoice_rules', '=', [])]}">
+									<tree editable="top" create="false">
+										<field name="payment_category_id" invisible="1"/>
+										<field name="name"/>
+										<field name="category_type" invisible="1"/>
+										<field name="balance_payment" invisible="1"/>
+										<field name="invoiced_date" invisible="1"/>
+										<field name="due" invisible="1"/>
+										<field name="invoiced"/>
+										<field name="value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+										<field name="discount" invisible="1"/>
+										<field name="discount_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+										<field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+										<field name="currency_id" invisible="1"/>
+										<field name="category_type" groups="base.group_no_one"/>
+										<field name="balance_payment" groups="base.group_no_one"/>
+										<field name="invoiced_date" groups="base.group_no_one"/>
+										<field name="due" groups="base.group_no_one"/>
+										<field name="term_id" groups="base.group_no_one"/>
+									</tree>
+								</field>
+								<field name="is_not_invoiced" invisible="1"/>
+								<field name="due_invoice">
+									<tree default_order="id desc" create="false" edit="false" decoration-success="unpaid==0" decoration-warning="active==False">
+										<field name="active" invisible="1"/>
+										<field name="name"/>
+										<field name="reference"/>
+										<field name="due_date"/>
+										<field name="balance_payment" attrs="{'readonly': ['|', '!', ('reference', 'ilike', 'SPP'), ('status', '=', 'Lunas')]}"/>
+										<field name="currency_id" invisible="1"/>
+										<field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+										<field name="status"/>
+										<field name="unpaid" invisible="1"/>
+										<button string="Ubah" icon="fa-pencil" type="object" name="action_change_amount" groups="asm_student_payment.manager_group"/>
+									</tree>
+								</field>
+								<field name="refund_ids" attrs="{'invisible': [('refund_ids', '=', [])]}" readonly="1"/>
+							</group>
+						</page>
+					</xpath>
+					<field name="state_id" position="before">
+						<field name="id" invisible="1"/>
+						<button class="oe_highlight" string="Register Pembayaran" type="action" name="%(payment_modal_act)d" groups="asm_student_payment.operator_group"/>
+						<button string="Aturan Tagihan" type="object" name="populate_invoice_rules" icon="fa-repeat" confirm="Anda akan mengganti aturan tagihan yang ada dengan aturan tagihan dari template pembayaran saat ini. Apakah Anda yakin?" groups="asm_student_payment.operator_group"/>
+						<button string="Tagihan" type="object" name="view_create_invoice" icon="fa-plus" groups="asm_student_payment.operator_group"/>
+						<button string="Tagihan Custom" type="object" name="view_create_custom_invoice" icon="fa-plus" groups="asm_student_payment.operator_group"/>
+						<button string="Refund" icon="fa-money" type="object" name="action_open_refund" groups="asm_student_payment.manager_group"/>
+						<button string="Kontrak" name="print_report" type="object" attrs="{'invisible': ['|', ('payment_template', '=', False), ('payment_rule_match', '=', False)]}" icon="fa-print" groups="asm_student_payment.operator_group"/>
+					</field>
+				</field>
+			</record>
+
+		<!-- State View -->			
+			<record id="student_payment_inherit_state" model="ir.ui.view">
+				<field name="name">student_payment_inherit_state</field>
+				<field name="model">asm.state</field>
+				<field name="inherit_id" ref="asm_student.state_form"/>
+				<field name="arch" type="xml">
+					<notebook>
+						<page string="Aturan Pembayaran">
+							<group>
+								<field name="is_invoiced"/>
+							</group>
+						</page>
+					</notebook>
+				</field>
+			</record>
+	</data>
+</odoo>

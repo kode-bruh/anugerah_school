@@ -1,0 +1,76 @@
+<odoo>
+	<data>
+		<report
+			string="Laporan Estimasi"
+			id="financial_report"
+			model="asm.financial.report"
+			report_type="qweb-pdf"
+			name="asm_student_payment.financial_report_template"
+			file="asm_student_payment.financial_report_template"
+			print_report_name="'%s' % (object.name)"
+		/>
+
+		<template id="financial_report_template">
+			<t t-call="web.html_container">
+				<t t-call="web.basic_layout">
+					<t t-foreach="docs" t-as="o">
+						<div class='header'>
+							<div class="row">
+								<div class="col-2">
+									<img src="/asm_student/static/src/img/Logo.png" class="img-fluid"/>
+								</div>
+								<div class="col-10">
+									<h4 class="text-center">YAYASAN ANUGERAH DHARMA SEJAHTERA</h4>
+									<h2 class="text-center">KB-TK-SD-SMP ANUGERAH SCHOOL</h2>
+									<p class="text-center">Kawasan Sentra Niaga Blok RE. 29, Citra Garden, Sidoarjo, Indonesia<br/>Telp: 807-3097 | Fax: 807-3098 | Email: info@anugerahschool.sch.id</p>
+								</div>
+							</div>
+							<div class="row my-3">
+								<div class="col-12" style="border-bottom: 2px solid black">
+								</div>
+							</div>
+						</div>
+						<div class="page">
+							<div class="row mt-5 mb-3">
+								<div class="col-12 text-center">
+									<h3>LAPORAN Estimasi</h3>
+									<h5>Periode <span t-field="o.month"/> <span t-field="o.year"/></h5>
+								</div>
+							</div>
+							<div class="row my-3">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th width="40%">Jenis Tagihan</th>
+											<th>Potensi Pemasukan</th>
+											<th>Realisasi Pemasukan*</th>
+										</tr>
+									</thead>
+									<tbody>
+										<t t-set="total_base" t-value="0"/>
+										<t t-set="total_paid" t-value="0"/>
+										<tr t-foreach="o.item_ids" t-as="line">
+											<td><span t-field="line.category_id"/></td>
+											<td class="text-end">Rp. <span t-field="line.total"/></td>
+											<td class="text-end">Rp. <span t-field="line.paid"/></td>
+											<t t-set="total_base" t-value="total_base + line.total"/>
+											<t t-set="total_paid" t-value="total_paid + line.paid"/>											
+										</tr>
+									</tbody>
+									<tfooter>
+										<tr>
+											<td class="text-end">TOTAL</td>
+											<td class="text-end">Rp. <span t-esc="'{:,}'.format(total_base)"/></td>
+											<td class="text-end">Rp. <span t-esc="'{:,}'.format(total_paid)"/></td>
+										</tr>
+									</tfooter>
+								</table>
+								<p class="text-muted">*Nominal Terbayar ter-update tiap hari.</p>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

@@ -1,0 +1,67 @@
+<odoo>
+	<data>
+		<report
+			string="Invoice List"
+			id="student_invoice_list"
+			model="as.due.payment"
+			report_type="qweb-pdf"
+			name="asm_student_payment.student_invoice_list"
+			file="asm_student_payment.student_invoice_list"
+			print_report_name="'Invoice List'"
+		/>
+
+		<template id="student_invoice_list">
+			<t t-call="web.html_container">
+				<t t-call="web.basic_layout">
+					<div class='header'>
+						<div class="row">
+							<div class="col-2">
+								<img src="/asm_student/static/src/img/Logo.png" class="img-fluid"/>
+							</div>
+							<div class="col-10">
+								<h4 class="text-center">YAYASAN ANUGERAH DHARMA SEJAHTERA</h4>
+								<h2 class="text-center">KB-TK-SD-SMP ANUGERAH SCHOOL</h2>
+								<p class="text-center">Kawasan Sentra Niaga Blok RE. 29, Citra Garden, Sidoarjo, Indonesia<br/>Telp: 807-3097 | Fax: 807-3098 | Email: info@anugerahschool.sch.id</p>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-12" style="border-bottom: 2px solid black">
+							</div>
+						</div>
+					</div>
+					<div class="page">
+						<div class="row mt-5 mb-3">
+							<div class="col-4 text-center">
+								<h3 class="text-end">DAFTAR TAGIHAN</h3>
+							</div>
+						</div>
+						<div class="row my-3">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Siswa (Kelas)</th>
+										<th>Kode</th>
+										<th>Tagihan</th>
+										<th>Batas Bayar</th>
+										<th>Nominal</th>
+										<th>Belum Lunas</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr t-foreach="docs" t-as="o">
+										<td><span t-field="o.student_id"/> (<span t-field="o.current_class"/>)</td>
+										<td><span t-field="o.name"/></td>
+										<td><span t-field="o.reference"/></td>
+										<td><span t-esc="o.due_date.strftime('%d %B %Y')"/></td>
+										<td><span t-esc="o.currency_id.symbol"/> <span t-field="o.amount_total"/></td>
+										<td><span t-esc="o.currency_id.symbol"/> <span t-field="o.unpaid"/></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>
