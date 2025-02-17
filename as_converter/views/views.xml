@@ -1,0 +1,134 @@
+<odoo>
+	<data>
+		<record id="importer_act" model="ir.actions.act_window">
+			<field name="name">Import Excel</field>
+			<field name="res_model">as.import</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="importer_tree_view" model="ir.ui.view">
+			<field name="name">importer_tree_view</field>
+			<field name="model">as.import</field>
+			<field name="arch" type="xml">
+				<tree default_order="date desc">
+					<field name="name"/>
+					<field name="date" invisible="1"/>
+					<field name="month"/>
+					<field name="year"/>
+					<field name="file"/>
+					<field name="done" string="Sudah Import?"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="importer_form_view" model="ir.ui.view">
+			<field name="name">importer_form_view</field>
+			<field name="model">as.import</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button string="Load Data" type="object" name="action_load" colspan="2" class="oe_highlight" attrs="{'invisible': [('done', '=', True)]}"/>
+						<button string="Import Payment" type="object" name="action_import" class="oe_highlight" attrs="{'invisible': ['|', ('ready', '=', False), ('done', '=', True)]}" confirm="Anda akan melakukan import untuk semua baris yang tertera di form ini. Pastikan semua baris sudah benar dan valid sebelum melanjutkan. Apa Anda ingin melanjutkan?" />
+						<button string="Cek Ulang" type="object" name="recheck_all_items" attrs="{'invisible': [('done', '=', True)]}" confirm="Anda akan mengecek ulang semua baris dalam import autodebit ini yang mungkin merubah sasaran tagihan siswa yang terbayar oleh autodebit. Apa Anda ingin melanjutkan?"/>
+						<button string="Undo Import" type="object" name="action_undo_import" colspan="2" class="oe_highlight" attrs="{'invisible': [('done', '=', False)]}" groups="base.group_system" confirm="Anda akan membatalkan / undo semua pembayaran yang telah dilakukan Autodebit ini. Apa Anda ingin melanjutkan?"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="file" attrs="{'readonly': [('done', '=', True)]}"/>
+								<field name="account_id" options="{'no_create': 1, 'no_create_edit': 1}" attrs="{'readonly': [('done', '=', True)]}"/>
+								<field name="ready" invisible="1"/>
+								<field name="done" invisible="1"/>
+								<label for="month" string="Periode"/>
+								<div class="o_row">
+									<span><field name="month"/></span>
+									<span><field name="year"/></span>
+								</div>
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="create_uid"/>
+								<field name="create_date"/>
+							</group>
+							<group>
+								<field name="write_uid"/>
+								<field name="write_date"/>
+							</group>
+						</group>
+						<group string="Akan Diimport">
+							<field name="item_ids" nolabel="1" colspan="2" readonly="1">
+								<tree decoration-danger="state=='Error' and to_import==True" decoration-muted="to_import==False" default_order="state asc">
+									<field name="name"/>
+									<field name="nias"/>
+									<field name="student_id"/>
+									<field name="amount_total"/>
+									<field name="invoice_ids" widget="many2many_tags"/>
+									<field name="state" invisible="1"/>
+									<field name="note" string="Keterangan"/>
+									<button string="Cek" type="object" name="action_refresh" class="oe_highlight" attrs="{'invisible': [('done', '=', True)]}"/>
+									<field name="done" invisible="1"/>
+									<field name="to_import" invisible="1"/>
+									<button string="Toggle Import" type="object" name="action_toggle_import" attrs="{'invisible': [('done', '=', True)]}"/>
+								</tree>
+							</field>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<menuitem id="importer_menu" name="Autodebit" parent="asm_accounting.root_menu" action="importer_act"/>
+
+		<!-- <record id="converter_act" model="ir.actions.act_window">
+			<field name="name">Convert Excel</field>
+			<field name="res_model">as.convert</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('parent_id', '=', False)]</field>
+		</record>
+
+		<record id="converter_tree_view" model="ir.ui.view">
+			<field name="name">converter_tree_view</field>
+			<field name="model">as.convert</field>
+			<field name="arch" type="xml">
+				<tree default_order="create_date desc" decoration-success="is_imported==True">
+					<field name="create_date" invisible="1"/>
+					<field name="is_imported" invisible="1"/>
+					<field name="date"/>
+					<field name="month"/>
+					<field name="year"/>
+				</tree>
+			</field>
+		</record>
+		<record id="converter_form_view" model="ir.ui.view">
+			<field name="name">converter_form_view</field>
+			<field name="model">as.convert</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+            			<button string="Convert Excel" type="object" name="convert_data" attrs="{'invisible': [('is_imported', '=', True)]}"/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button class="oe_stat_button" type="object" name="create_child" icon="fa-th-list" title="Import Lanjutan">
+								<field string="Import Lanjutan" name="child_count" widget="statinfo"/>
+							</button>
+						</div>
+						<group string="Upload Excel Autodebet">
+							<field name="is_imported" invisible="1"/>
+							<field name="date" invisible="1"/>
+							<field name="year" invisible="1"/>
+							<field name="month" invisible="1"/>
+							<field name="upload"/>
+							<field name="import_payment"/>
+							<field name="download" widget="binary" filename="download_name" readonly="1"/>
+							<field name="download_name" invisible="1"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record> -->
+
+		<!-- <menuitem id="converter_menu" name="Import Autodebit" parent="asm_accounting.accounting_cfg_menu" action="converter_act"/> -->
+	</data>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_as_import_operator,access_as_import_operator,model_as_import,asm_student_payment.operator_group,1,1,1,0
+access_as_import_line_operator,access_as_import_line_operator,model_as_import_line,asm_student_payment.operator_group,1,1,1,0
+
+access_as_import_manager,access_as_import_manager,model_as_import,asm_student_payment.manager_group,1,1,1,1
+access_as_import_line_manager,access_as_import_line_manager,model_as_import_line,asm_student_payment.manager_group,1,1,1,1
